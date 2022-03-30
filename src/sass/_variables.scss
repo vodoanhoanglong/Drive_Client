@@ -1,0 +1,25 @@
+$main-color: #ec572e;
+$main-background: #ffffff;
+
+$text-main-color: #000;
+$text-second-color: #464646;
+$text-white: #fff;
+
+$btn-main-bg: $main-color;
+$btn-main-color: #fff;
+$box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+
+$header-height: 60px;
+
+$input-color: #ccc;
+$item-color: rgba(149, 157, 165, 0.2);
+
+$colors: ('blue': #4267b2,
+  'green': #5db85c,
+  'orange': #fbb96b,
+  'pink': #fe7e73,
+  'white': #fff,
+  'black': #000,
+  'main': $main-color,
+  'red': #ff0000,
+);
