@@ -10,6 +10,7 @@ import { Route, Routes as Switch } from "react-router-dom";
 
 // components
 import LoginPage from "./features/auth/LoginPage";
+import MyDrive from "./features/drives/MyDrive";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:8080/v1/graphql",
@@ -35,6 +36,7 @@ function App() {
     <ApolloProvider client={client}>
       <Switch>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard" element={<MyDrive />} />
       </Switch>
     </ApolloProvider>
   );
