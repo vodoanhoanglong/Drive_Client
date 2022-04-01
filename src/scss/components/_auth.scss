@@ -1,0 +1,172 @@
+.auth {
+  @include flex(center, center);
+  width: 100%;
+  min-height: 100vh;
+  position: relative;
+  user-select: none;
+  overflow: hidden;
+
+  &::before {
+    background-image: linear-gradient(rgba(0, 0, 0, .1), rgba(0, 0, 0, .1)), url("../../assets/images/background.png");
+    background-size: cover;
+    bottom: -5px;
+    content: "";
+    left: -5px;
+    position: absolute;
+    right: -5px;
+    top: -5px;
+    z-index: -1;
+  }
+
+  .container {
+    background-color: rgba(88, 130, 193, 0.28);
+    border-radius: 6px;
+    padding: 35px 70px;
+    width: 100%;
+    max-width: 600px;
+    z-index: 100;
+    backdrop-filter: blur(5px);
+  }
+
+  &-heading {
+    text-transform: uppercase;
+    text-align: center;
+    font-size: 36px;
+    font-weight: 700;
+    color: $text-white
+  }
+
+  &-social {
+    width: 100%;
+
+    &-item {
+      height: 44px;
+      background-color: $main-background;
+      border: 2px solid transparent;
+      outline: none;
+      border-radius: 8px;
+      padding-left: 16px;
+      position: relative;
+      text-align: center;
+      margin-top: 16px;
+      transition: all 0.3s ease;
+
+      img {
+        width: 20px;
+        left: 16px;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+      }
+
+      span {
+        color: #35414c;
+        cursor: pointer;
+        font-size: 1.6rem;
+        font-weight: 500;
+        line-height: 40px;
+        outline: 0;
+        text-align: center;
+        user-select: none;
+      }
+
+      &:hover {
+        background-color: #003465;
+        cursor: pointer;
+      }
+
+      &:hover span {
+        color: $text-white;
+      }
+    }
+  }
+
+  &-form {
+    @include flex(flex-start, center);
+    flex-direction: column;
+    width: 100%;
+    margin-top: 16px;
+
+    &-control {
+      margin-bottom: 20px;
+      font-size: 1.6rem;
+      width: 100%;
+
+      color: $text-white;
+
+      input {
+        background-color: #eee;
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        outline: none;
+        border: 2px solid transparent;
+        margin-top: 6px;
+        transition: all 0.3s ease;
+
+        &:focus {
+          background-color: #fff;
+          border-color: lightcoral;
+        }
+      }
+    }
+
+    &-submit {
+      margin-top: 16px;
+      width: 100%;
+
+      button {
+        background-color: #003465;
+        border: none;
+        border-radius: 8px;
+        color: $text-white;
+        cursor: pointer;
+        font-size: 1.6rem;
+        font-weight: 500;
+        line-height: 40px;
+        outline: 0;
+        text-align: center;
+        user-select: none;
+        width: 100%;
+        transition: all 0.3s ease;
+
+        &:hover {
+          opacity: 0.8;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  &-footer {
+    margin-top: 32px;
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 300;
+    outline: 0;
+    text-align: center;
+    user-select: none;
+    color: $text-white;
+
+
+    &-link {
+      font-weight: 500;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.8;
+        color: inherit;
+      }
+    }
+  }
+
+}
+
+.devider {
+  text-align: center;
+  margin: 16px auto;
+  position: relative;
+  color: $text-white;
+  font-size: 14px;
+  font-weight: 400;
+}
