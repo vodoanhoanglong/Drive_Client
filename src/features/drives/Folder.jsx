@@ -16,13 +16,24 @@ const Item = styled(Button)(({ theme }) => ({
 }));
 
 export default function Folder(props) {
-  const { data } = props;
+  const {
+    data,
+    param: { setPathName, setPathPrefix },
+  } = props;
+
+  const handleClick = (id, name) => () => {
+    setPathName((prev) => `${prev} / ${name}`);
+    setPathPrefix((prev) => `${prev}/${id}`);
+  };
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-        {data.map((value, index) => (
-          <Grid item xs={2} sm={4} md={4} key={index}>
-            <Item startIcon={<FolderIcon />}>{value.name}</Item>
+        {data.map((value) => (
+          <Grid item xs={2} sm={4} md={4} key={value.id}>
+            <Item startIcon={<FolderIcon />} onClick={handleClick(value.id, value.name)}>
+              {value.name}
+            </Item>
           </Grid>
         ))}
       </Grid>

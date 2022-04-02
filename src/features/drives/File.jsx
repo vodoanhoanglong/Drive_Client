@@ -22,7 +22,10 @@ export default function File(props) {
       <Grid container spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }}>
         {data.map((value, index) => (
           <Grid item xs={2} sm={4} md={4} key={index}>
-            <Item startIcon={<InsertDriveFileIcon />}>{value.name}</Item>
+            <Item startIcon={<InsertDriveFileIcon />}>
+              {value.name}
+              {value.extension}
+            </Item>
           </Grid>
         ))}
       </Grid>
