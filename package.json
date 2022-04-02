@@ -11,6 +11,7 @@
     "@mui/styled-engine-sc": "^5.5.2",
     "@reduxjs/toolkit": "^1.8.0",
     "cra-template-redux": "1.0.3",
+    "firebase": "^9.6.10",
     "graphql": "^16.3.0",
     "node-sass": "^7.0.1",
     "react": "18.0.0",
