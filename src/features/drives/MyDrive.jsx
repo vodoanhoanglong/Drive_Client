@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import File from './File';
 import Folder from './Folder';
@@ -8,9 +8,11 @@ import { getStorage, ref, getDownloadURL, uploadBytesResumable } from 'firebase/
 import { app } from '../../firebase/base';
 import { Button } from '@mui/material';
 import styled from '@emotion/styled';
+import { useLazyQuery } from '@apollo/client';
+import { getMyFiles } from 'graphql/Queries';
 
 const workspaces = 'Workspaces';
-const userId = '0e959136-83b0-4f7b-8ad0-edba52b0b9e4';
+const userId = '4b98a8b5-3517-4948-b6af-e46762af9d3e';
 
 const Input = styled('input')({
   display: 'none',
@@ -35,8 +37,22 @@ const handleData = (data, path) => {
 function MyDrive() {
   const [pathPrefix, setPathPrefix] = useState(userId);
   const [pathName, setPathName] = useState(workspaces);
+  const [allData, setAllData] = useState([]);
 
-  const result = handleData(fakeData, pathPrefix);
+  console.log('haha');
+
+  const [getAllFiles, { data }] = useLazyQuery(getMyFiles, {
+    variables: {
+      path: userId + '%',
+    },
+  });
+
+  useEffect(() => {
+    getAllFiles();
+    if (data) setAllData(data.files);
+  }, [data, getAllFiles]);
+
+  const result = handleData(allData, pathPrefix);
 
   let fileList = [];
   let folderList = [];

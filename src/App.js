@@ -11,8 +11,11 @@ const httpLink = createHttpLink({
   uri: 'http://localhost:8080/v1/graphql',
 });
 
+const tempToken =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL25leGxhYi50ZWNoIiwic3ViIjoiNGI5OGE4YjUtMzUxNy00OTQ4LWI2YWYtZTQ2NzYyYWY5ZDNlIiwiYXVkIjoiYWNjZXNzIiwiZXhwIjoxNjQ5MDQ4MDU1LCJuYnQiOjE2NDg5NjE2NTUsImlhdCI6MTY0ODk2MTY1NSwianRpIjoiZDAyN2ZjMmMtZTVjNi00NGFmLTk5ZjgtODg2OGQyMWZhM2QwIiwicmRoIjoiSkRKaEpERXdKRWR2WkZGbVRYVnJhRWswWW05blZHYzRVRmxGYWs5UlVVNDJiWEpqV0RWNGFXcHZiRFJPV1dOT1VYQjFMM1ZDV0hacGFXZzIifQ.sxBOQDKCHqVBzL9r4oFLkhxQY8OuWoVmTzVlsyUccG0';
+
 const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token') || tempToken;
   return {
     headers: {
       ...headers,
