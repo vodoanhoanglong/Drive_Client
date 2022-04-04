@@ -1,9 +1,12 @@
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { authAction } from 'app/authSlice';
 import { CREATE_ACCOUNT } from 'graphql/Mutation';
+import { GET_USER_BY_ID } from 'graphql/Queries';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 
 const schemaValidation = Yup.object({
@@ -16,15 +19,18 @@ const schemaValidation = Yup.object({
 });
 
 function Register() {
-  const [createAccount] = useMutation(CREATE_ACCOUNT, {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [createAccount] = useMutation(CREATE_ACCOUNT);
+  const [getUserByID] = useLazyQuery(GET_USER_BY_ID, {
     onCompleted: (data) => {
-      console.log(data.createAccount);
+      dispatch(authAction.loginSuccess(data.account[0]));
+      navigate('/drive');
     },
     onError: (error) => {
       console.log(error);
     },
   });
-
   const {
     register,
     handleSubmit,
@@ -34,6 +40,11 @@ function Register() {
   const handleRegister = (data) => {
     createAccount({
       variables: { email: data.email, password: data.password, displayName: data.username },
+      onCompleted: (data) => {
+        const { id, access_token } = data.createAccount;
+        localStorage.setItem('token', access_token);
+        getUserByID({ variables: { ID: id } });
+      },
     });
   };
 
@@ -44,7 +55,7 @@ function Register() {
           <h3>Sign up</h3>
         </div>
         <form autoComplete='off' className='auth-form' onSubmit={handleSubmit(handleRegister)}>
-          <div className={`auth-form-control ${errors.email ? 'error' : ''}`}>
+          <div className={`auth-form-control ${errors.username ? 'error' : ''}`}>
             <label htmlFor='username'>Username</label>
             <input {...register('username')} id='username' type='text' placeholder='Username' />
             {errors.username && <label className='errors-message'>{errors.username.message}</label>}
@@ -54,12 +65,12 @@ function Register() {
             <input {...register('email')} id='email' type='text' placeholder='Email' />
             {errors.email && <label className='errors-message'>{errors.email.message}</label>}
           </div>
-          <div className={`auth-form-control ${errors.email ? 'error' : ''}`}>
+          <div className={`auth-form-control ${errors.password ? 'error' : ''}`}>
             <label htmlFor='password'>Password</label>
             <input {...register('password')} id='password' type='password' placeholder='Password' />
             {errors.password && <label className='errors-message'>{errors.password.message}</label>}
           </div>
-          <div className={`auth-form-control ${errors.email ? 'error' : ''}`}>
+          <div className={`auth-form-control ${errors.repassword ? 'error' : ''}`}>
             <label htmlFor='repassword'>Confirm Password</label>
             <input
               {...register('repassword')}
