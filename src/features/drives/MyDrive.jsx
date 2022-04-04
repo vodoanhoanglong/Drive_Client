@@ -7,9 +7,18 @@ import fakeData from './data.json';
 
 import { useLazyQuery } from '@apollo/client';
 import { getMyFiles } from 'graphql/Queries';
+import CreateFolder from './CreateFolder';
+import LinearProgress from '@mui/material/LinearProgress';
+import { Box } from '@mui/system';
 
 const workspaces = 'Workspaces';
 const userId = '4b98a8b5-3517-4948-b6af-e46762af9d3e';
+
+const styleProgress = {
+  position: 'absolute',
+  top: '-5%',
+  display: 'none',
+};
 
 const handleData = (data, path) => {
   const listItem = [];
@@ -23,10 +32,12 @@ const handleData = (data, path) => {
   return listItem;
 };
 
-function MyDrive() {
+function MyDrive({ setAlert }) {
   const [pathPrefix, setPathPrefix] = useState(userId);
   const [pathName, setPathName] = useState(workspaces);
+  const [progress, setProgress] = useState(0);
   const [allData, setAllData] = useState([]);
+  const progressRef = React.useRef(null);
 
   const [getAllFiles, { data }] = useLazyQuery(getMyFiles, {
     variables: {
@@ -34,6 +45,7 @@ function MyDrive() {
     },
   });
 
+  // fetch data
   useEffect(() => {
     getAllFiles();
     if (data) setAllData(data.files);
@@ -60,6 +72,9 @@ function MyDrive() {
 
   return (
     <div className='drives__container'>
+      <Box sx={{ width: '100%' }} ref={progressRef} style={styleProgress}>
+        <LinearProgress variant='determinate' value={progress} />
+      </Box>
       <div className='drives__container-header'>
         <div className='drives__title' onClick={() => handleClick()}>
           <ArrowBackIosIcon
@@ -70,7 +85,15 @@ function MyDrive() {
           />
           <h3>{pathName}</h3>
         </div>
-        <UploadFile pathPrefix={pathPrefix} userId={userId} />
+        <div style={{ display: 'flex' }}>
+          <UploadFile
+            pathPrefix={pathPrefix}
+            setAllData={setAllData}
+            setProgress={setProgress}
+            progressRef={progressRef}
+          />
+          <CreateFolder setAllData={setAllData} pathPrefix={pathPrefix} setAlert={setAlert} />
+        </div>
       </div>
       <h2 className='drives__heading'>
         <b>Thư mục</b>
@@ -81,7 +104,7 @@ function MyDrive() {
         <b>Tập tin</b>
         <hr solid='true' />
       </h2>
-      <File data={fileList} />
+      <File data={fileList} pathPrefix={pathPrefix} setAllData={setAllData} />
     </div>
   );
 }

@@ -15,7 +15,16 @@ const btnStyle = {
   fontSize: '1.5rem',
 };
 
-const handleChange = async (e, userId, pathPrefix, addFile, error, updateUrl) => {
+const handleChange = async (
+  e,
+  pathPrefix,
+  addFile,
+  error,
+  updateUrl,
+  setAllData,
+  setProgress,
+  progressRef
+) => {
   const file = e.target.files[0];
   const storage = getStorage(app);
   const metadata = {
@@ -43,9 +52,7 @@ const handleChange = async (e, userId, pathPrefix, addFile, error, updateUrl) =>
     return;
   }
 
-  console.log(`hahahahahah: ${returningData}`);
-
-  const storageRef = ref(storage, `${userId}/${file.name}`);
+  const storageRef = ref(storage, `${pathPrefix}/${file.name}`);
   const uploadTask = uploadBytesResumable(storageRef, file, metadata);
 
   // Listen for state changes, errors, and completion of the upload.
@@ -53,7 +60,8 @@ const handleChange = async (e, userId, pathPrefix, addFile, error, updateUrl) =>
     'state_changed',
     (snapshot) => {
       const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-      console.log('Upload is ' + progress + '% done');
+      setProgress(progress);
+      progressRef.current.style.display = 'block';
       // eslint-disable-next-line default-case
       switch (snapshot.state) {
         case 'paused':
@@ -78,28 +86,47 @@ const handleChange = async (e, userId, pathPrefix, addFile, error, updateUrl) =>
     },
     () => {
       // Upload completed successfully, now we can get the download URL
-      getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+      getDownloadURL(uploadTask.snapshot.ref).then(async (downloadURL) => {
         console.log('File available at', downloadURL);
-        updateUrl({ variables: { id: returningData.uploadFile.id, url: downloadURL } });
+        await updateUrl({
+          variables: { id: returningData.uploadFile.id, url: downloadURL },
+          onCompleted: (data) => {
+            setAllData((prevData) => [...prevData, data.update_files_by_pk]);
+          },
+        });
+        progressRef.current.style.display = 'none';
       });
     }
   );
 };
 
-function UploadFile({ userId, pathPrefix }) {
+function UploadFile({ pathPrefix, setAllData, setProgress, progressRef }) {
   const [addFile, { error }] = useMutation(uploadFile);
   const [updateUrl] = useMutation(updateFileUrl);
 
   return (
-    <label
-      htmlFor='contained-button-file'
-      onChange={(e) => handleChange(e, userId, pathPrefix, addFile, error, updateUrl)}
-    >
-      <Input accept='image/*' id='contained-button-file' multiple type='file' />
-      <Button style={btnStyle} variant='contained' component='span'>
-        Upload
-      </Button>
-    </label>
+    <>
+      <label
+        htmlFor='contained-button-file'
+        onChange={(e) =>
+          handleChange(
+            e,
+            pathPrefix,
+            addFile,
+            error,
+            updateUrl,
+            setAllData,
+            setProgress,
+            progressRef
+          )
+        }
+      >
+        <Input accept='image/*' id='contained-button-file' multiple type='file' />
+        <Button style={btnStyle} variant='contained' component='span'>
+          Upload
+        </Button>
+      </label>
+    </>
   );
 }
 

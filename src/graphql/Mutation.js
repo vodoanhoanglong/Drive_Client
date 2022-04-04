@@ -31,6 +31,9 @@ export const uploadFile = gql`
       url
       name
       path
+      extension
+      size
+      accountId
     }
   }
 `;
@@ -39,6 +42,14 @@ export const updateFileUrl = gql`
   mutation updateFileUrl($id: String!, $url: String!) {
     update_files_by_pk(pk_columns: { id: $id }, _set: { url: $url }) {
       url
+    }
+  }
+`;
+
+export const deleteFile = gql`
+  mutation MyMutation($id: String!) {
+    update_files_by_pk(pk_columns: { id: $id }, _set: { status: 1 }) {
+      id
     }
   }
 `;

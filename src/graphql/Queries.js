@@ -13,4 +13,12 @@ const getMyFiles = gql`
   }
 `;
 
+export const checkFileName = gql`
+  query checkFileName($path: String!, $name: String!, $extension: String!) {
+    check_file_name(args: { extension_input: $extension, name_input: $name, path_input: $path }) {
+      name
+    }
+  }
+`;
+
 export { getMyFiles };
