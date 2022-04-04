@@ -6,6 +6,7 @@ import { NotFound, ProtectedRoute } from './components/common';
 import Layout from './components/layout';
 import Login from './features/auth/pages/Login';
 import Register from './features/auth/pages/Register';
+import Search_filter from './features/filter_search/Search-filter';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:8080/v1/graphql',
@@ -29,17 +30,16 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <React.Fragment>
-        <Switch>
-          <Route path='/' element={<Navigate to='/drive' />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='/register' element={<Register />} />
-          <Route path='/drive/*' element={<ProtectedRoute />}>
-            <Route path='/drive/*' element={<Layout />} />
-          </Route>
-          <Route path='*' element={<NotFound />} />
-        </Switch>
-      </React.Fragment>
+      <Switch>
+        <Route path='/dashboard' element={<Search_filter />} />
+        <Route path='/' element={<Navigate to='/drive' />} />
+        <Route path='/login' element={<Login />} />
+        <Route path='/register' element={<Register />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path='/drive/*' element={<Layout />} />
+        </Route>
+        <Route path='*' element={<NotFound />} />
+      </Switch>
     </ApolloProvider>
   );
 }
