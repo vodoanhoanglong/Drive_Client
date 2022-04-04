@@ -6,6 +6,8 @@ import { Navigate, Route, Routes as Switch } from 'react-router-dom';
 import { NotFound, ProtectedRoute } from './components/common';
 import Layout from './components/layout';
 import Login from './features/auth/pages/Login';
+import Search_filter from "./features/filter_search/Search-filter";
+
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:8080/v1/graphql',
@@ -30,6 +32,7 @@ function App() {
   return (
     <ApolloProvider client={client}>
       <Switch>
+        <Route path="/dashboard" element={<Search_filter />} />
         <Route path='/' element={<Navigate to='/drive' />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
