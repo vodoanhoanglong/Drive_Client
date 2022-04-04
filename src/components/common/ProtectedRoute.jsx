@@ -1,12 +1,9 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
-
-const auth = () => {
-  const user = { isLoggedIn: false };
-  return user && user.isLoggedIn;
-};
+import { useSelector } from 'react-redux';
+import { Navigate, Outlet } from 'react-router-dom';
 
 export const ProtectedRoute = () => {
-  const isAuth = auth();
-  return isAuth ? <Navigate to='/drive' /> : <Navigate to='/login' />;
+  const isLoggedIn = useSelector((state) => state.auth.isLoggedIn);
+
+  return isLoggedIn ? <Outlet /> : <Navigate to='/login' />;
 };

@@ -65,3 +65,31 @@ a {
 a:hover {
   color: $main-color;
 }
+
+.container {
+  width: 100%;
+  min-height: 100vh;
+  user-select: none;
+  overflow: hidden;
+  position: relative;
+
+  &:before {
+    background-image: $background-image;
+    background-size: cover;
+    bottom: -5px;
+    content: "";
+    left: -5px;
+    position: absolute;
+    right: -5px;
+    top: -5px;
+    z-index: -1;
+  }
+}
+
+.errors-message {
+  display: block;
+  color: #ED213A;
+  font-size: 1.4rem;
+  font-weight: 500;
+  padding: 2px auto;
+}
