@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import { useLazyQuery } from '@apollo/client';
+import styled from '@emotion/styled';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import { Button } from '@mui/material';
+import { getDownloadURL, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import { getMyFiles } from 'graphql/Queries';
+import React, { useEffect, useState } from 'react';
+import { app } from '../../firebase/base';
 import File from './File';
 import Folder from './Folder';
-import fakeData from './data.json';
-
-import { getStorage, ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
-import { app } from '../../firebase/base';
-import { Button } from '@mui/material';
-import styled from '@emotion/styled';
-import { useLazyQuery } from '@apollo/client';
-import { getMyFiles } from 'graphql/Queries';
 
 const workspaces = 'Workspaces';
 const userId = '4b98a8b5-3517-4948-b6af-e46762af9d3e';
@@ -23,12 +21,12 @@ const btnStyle = {
 };
 
 const handleData = (data, path) => {
-  const listItem = [];
+  // const listItem = [];
   const length = path.split('/').length + 1;
 
-  data.map((item) => {
+  const listItem = data.map((item) => {
     const file = item.path.startsWith(`${path}/`);
-    if (file && item.path.split('/').length === length) listItem.push(item);
+    return file && item.path.split('/').length === length;
   });
 
   return listItem;
@@ -38,8 +36,6 @@ function MyDrive() {
   const [pathPrefix, setPathPrefix] = useState(userId);
   const [pathName, setPathName] = useState(workspaces);
   const [allData, setAllData] = useState([]);
-
-  console.log('haha');
 
   const [getAllFiles, { data }] = useLazyQuery(getMyFiles, {
     variables: {
@@ -96,6 +92,8 @@ function MyDrive() {
           case 'running':
             console.log('Upload is running');
             break;
+          default:
+            break;
         }
       },
       (error) => {
@@ -113,6 +111,8 @@ function MyDrive() {
 
           case 'storage/unknown':
             // Unknown error occurred, inspect error.serverResponse
+            break;
+          default:
             break;
         }
       },

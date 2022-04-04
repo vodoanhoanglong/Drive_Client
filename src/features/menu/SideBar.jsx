@@ -1,21 +1,20 @@
-import React, { useState } from 'react';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
+import AddToDriveIcon from '@mui/icons-material/AddToDrive';
+import GroupIcon from '@mui/icons-material/Group';
 import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
+import Drawer from '@mui/material/Drawer';
+import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import DeleteIcon from '@mui/icons-material/Delete';
-import GroupIcon from '@mui/icons-material/Group';
-import AddToDriveIcon from '@mui/icons-material/AddToDrive';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import React, { useState } from 'react';
 import MyDrive from './MyDrive';
-import ShareDrive from './ShareDrive';
 import Repo from './Repo';
+import ShareDrive from './ShareDrive';
 
 const drawerWidth = 240;
 
@@ -46,6 +45,8 @@ export default function PermanentDrawerLeft() {
         break;
       case 3:
         setstate('repo');
+        break;
+      default:
         break;
     }
   };

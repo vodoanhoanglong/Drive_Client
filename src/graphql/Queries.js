@@ -9,6 +9,8 @@ const getMyFiles = gql`
       size
       extension
       url
+    }
+  }
 `;
 
 const GET_USER_BY_ID = gql`
