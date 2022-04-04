@@ -6,6 +6,7 @@ import { Navigate, Route, Routes as Switch } from 'react-router-dom';
 import { NotFound, ProtectedRoute } from './components/common';
 import Layout from './components/layout';
 import Login from './features/auth/pages/Login';
+import SideBar from './features/menu/SideBar';
 
 const httpLink = createHttpLink({
   uri: 'http://localhost:8080/v1/graphql',
@@ -36,6 +37,8 @@ function App() {
         <Route path='/' element={<Navigate to='/drive' />} />
         <Route path='/login' element={<Login />} />
         <Route path='/register' element={<Register />} />
+        <Route path='/menu' element={<SideBar />} />
+
         <Route element={<ProtectedRoute />}>
           <Route path='/drive/*' element={<Layout />} />
         </Route>
