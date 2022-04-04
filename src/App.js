@@ -10,6 +10,7 @@ import { Route, Routes as Switch } from "react-router-dom";
 
 // components
 import LoginPage from "./features/auth/LoginPage";
+import Search_filter from "./features/filter_search/Search-filter";
 
 const httpLink = createHttpLink({
   uri: "http://localhost:8080/v1/graphql",
@@ -35,6 +36,7 @@ function App() {
     <ApolloProvider client={client}>
       <Switch>
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/dashboard" element={<Search_filter />} />
       </Switch>
     </ApolloProvider>
   );
