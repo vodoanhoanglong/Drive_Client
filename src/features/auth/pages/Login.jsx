@@ -88,8 +88,20 @@ function Login() {
       });
   };
 
-  const handleLogin = (data) => {
-    console.log(data);
+  const handleLogin = (values) => {
+    dispatch(authAction.login());
+    loginByAccount({
+      variables: { email: values.email, password: values.password },
+      onCompleted: (data) => {
+        const { access_token } = data.login;
+        localStorage.setItem('token', access_token);
+        getUserByEmail({ variables: { email: values.email } });
+      },
+      onError: (error) => {
+        dispatch(authAction.loginFailure());
+        console.error(error);
+      },
+    });
   };
 
   return (
