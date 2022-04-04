@@ -1,11 +1,6 @@
-import MyDrive from 'features/drives/MyDrive';
-import React from 'react';
+import React from "react";
 const Layout = () => {
-  return (
-    <div>
-      <MyDrive />
-    </div>
-  );
+	return <div>Layout</div>;
 };
 
 export default Layout;

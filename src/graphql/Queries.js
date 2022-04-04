@@ -1,15 +1,4 @@
-import { gql } from '@apollo/client';
-
-const getMyFiles = gql`
-  query getMyFiles($path: String!) {
-    files(where: { path: { _similar: $path } }) {
-      id
-      name
-      path
-      size
-      extension
-      url
-`;
+const { gql } = require('@apollo/client');
 
 const GET_USER_BY_ID = gql`
   query getAccountInfo($ID: String!) {
@@ -32,5 +21,4 @@ const GET_USER_BY_EMAIL = gql`
   }
 `;
 
-export { getMyFiles };
 export { GET_USER_BY_ID, GET_USER_BY_EMAIL };
