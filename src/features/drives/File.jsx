@@ -58,82 +58,45 @@ const img = ['.png', '.jpeg', '.jpg', '.gif', '.bmp'];
 const audio = ['.mp3', '.wav', '.ogg', '.flac'];
 const video = ['.mp4', '.avi', '.mkv', '.mov', '.wmv'];
 
-const handleFileType = (
-  { extension, url, name, id },
-  anchorEl,
-  setAnchorEl,
-  pathPrefix,
-  deleteExcute,
-  setAllData
-) => {
-  console.log(id);
-  if (!img.includes(extension) && !audio.includes(extension) && !video.includes(extension)) {
-    return (
-      <Item startIcon={<InsertDriveFileIcon />} onClick={() => window.open(url)}>
-        {name}
-        {extension}
-      </Item>
-    );
-  }
-  const open = Boolean(anchorEl);
+const ListItemComponent = ({
+  param: { id, setAnchorEl, pathPrefix, deleteExcute, setAllData },
+}) => {
+  console.log(pathPrefix);
+  const handleDelete = async () => {
+    setAnchorEl(null);
+    // Create a reference to the file to delete
+    const desertRef = ref(storage, pathPrefix);
+
+    // Delete the file
+    await deleteObject(desertRef)
+      .then(() => {
+        // File deleted successfully
+      })
+      .catch((error) => {
+        console.log(`Delete file error: ${error}`);
+      });
+
+    await deleteExcute({
+      variables: { id },
+      onCompleted: () => setAllData((prevData) => [...prevData].filter((item) => item.id !== id)),
+    });
+  };
+
   return (
-    <Card sx={{ maxWidth: 345 }}>
-      <CardActionArea>
-        <CardMedia
-          style={styleImage}
-          component={handleExtension(extension)}
-          height='140'
-          src={url}
-          alt='green iguana'
-          onClick={() => window.open(url)}
-        />
-        <CardContent style={styleContent}>
-          <Typography gutterBottom variant='h5' component='div'>
-            {name}
-            {extension}
-          </Typography>
-          <MoreVertIcon
-            style={styleCardIcon}
-            onClick={(event) => handleClickIconSetting(event, setAnchorEl)}
-          />
-        </CardContent>
-      </CardActionArea>
-      <Popover
-        open={open}
-        onClose={() => setAnchorEl(null)}
-        anchorEl={anchorEl}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
-        }}
-      >
-        <List sx={styleDivider} component='nav'>
-          <ListItem
-            button
-            onClick={() =>
-              handleDelete(
-                setAnchorEl,
-                `${pathPrefix}/${name}${extension}`,
-                id,
-                deleteExcute,
-                setAllData
-              )
-            }
-          >
-            <ListItemText style={styleListItemText} primary='Delete' />
-          </ListItem>
-          <Divider />
-          <ListItem button divider>
-            <ListItemText style={styleListItemText} primary='Share' />
-          </ListItem>
-        </List>
-      </Popover>
-    </Card>
+    <List sx={styleDivider} component='nav'>
+      <ListItem button onClick={handleDelete}>
+        <ListItemText style={styleListItemText} primary='Delete' />
+      </ListItem>
+      <Divider />
+      <ListItem button divider>
+        <ListItemText style={styleListItemText} primary='Share' />
+      </ListItem>
+    </List>
   );
+};
+
+const handleClickIconSetting = (event, setAnchorEl) => {
+  setAnchorEl(event.currentTarget);
 };
 
 const handleExtension = (extension) => {
@@ -146,42 +109,71 @@ const handleExtension = (extension) => {
   }
 };
 
-const handleClickIconSetting = (event, setAnchorEl) => {
-  setAnchorEl(event.currentTarget);
-};
-
-const handleDelete = async (setAnchorEl, pathPrefix, fileId, deleteExcute, setAllData) => {
-  setAnchorEl(null);
-  console.log(fileId);
-  // Create a reference to the file to delete
-  const desertRef = ref(storage, pathPrefix);
-
-  // Delete the file
-  await deleteObject(desertRef)
-    .then(() => {
-      // File deleted successfully
-    })
-    .catch((error) => {
-      console.log(`Delete file error: ${error}`);
-    });
-
-  await deleteExcute({
-    variables: { id: fileId },
-    onCompleted: () => setAllData((prevData) => [...prevData].filter((item) => item.id !== fileId)),
-  });
-};
-
 export default function File(props) {
   const { data, pathPrefix, setAllData } = props;
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [deleteExcute] = useMutation(deleteFile);
+  const open = Boolean(anchorEl);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }}>
         {data.map((value, index) => (
           <Grid item xs={2} sm={4} md={4} key={index}>
-            {handleFileType(value, anchorEl, setAnchorEl, pathPrefix, deleteExcute, setAllData)}
+            {!img.includes(value.extension) &&
+            !audio.includes(value.extension) &&
+            !video.includes(value.extension) ? (
+              <Item startIcon={<InsertDriveFileIcon />} onClick={() => window.open(value.url)}>
+                {value.name}
+                {value.extension}
+              </Item>
+            ) : (
+              <Card sx={{ maxWidth: 345 }}>
+                <CardActionArea>
+                  <CardMedia
+                    style={styleImage}
+                    component={handleExtension(value.extension)}
+                    height='140'
+                    src={value.url}
+                    alt='green iguana'
+                    onClick={() => window.open(value.url)}
+                  />
+                  <CardContent style={styleContent}>
+                    <Typography gutterBottom variant='h5' component='div'>
+                      {value.name}
+                      {value.extension}
+                    </Typography>
+                    <MoreVertIcon
+                      style={styleCardIcon}
+                      onClick={(event) => handleClickIconSetting(event, setAnchorEl)}
+                    />
+                  </CardContent>
+                </CardActionArea>
+                <Popover
+                  open={open}
+                  onClose={() => setAnchorEl(null)}
+                  anchorEl={anchorEl}
+                  anchorOrigin={{
+                    vertical: 'top',
+                    horizontal: 'right',
+                  }}
+                  transformOrigin={{
+                    vertical: 'top',
+                    horizontal: 'left',
+                  }}
+                >
+                  <ListItemComponent
+                    param={{
+                      setAnchorEl,
+                      pathPrefix: `${pathPrefix}/${value.name}${value.extension}`,
+                      id: value.id,
+                      deleteExcute,
+                      setAllData,
+                    }}
+                  />
+                </Popover>
+              </Card>
+            )}
           </Grid>
         ))}
       </Grid>

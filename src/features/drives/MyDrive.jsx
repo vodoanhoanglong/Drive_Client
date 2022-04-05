@@ -49,7 +49,6 @@ function MyDrive({ setAlert }) {
   useEffect(() => {
     getAllFiles({
       onCompleted: (data) => {
-        console.log(allData);
         setAllData(data.files);
       },
     });

@@ -6,6 +6,7 @@ import { storage } from '../../app/firebaseConfig';
 import { Button } from '@mui/material';
 import { useMutation } from '@apollo/client';
 import { uploadFile, updateFileUrl } from '../../graphql/Mutation';
+import { getMyFiles } from '../../graphql/Queries';
 
 const Input = styled('input')({
   display: 'none',
