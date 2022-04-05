@@ -5,6 +5,7 @@ import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
+import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import React from 'react';
 
 const routing = [
@@ -31,8 +32,16 @@ export default function SideBar({ setContent }) {
       <List>
         {routing.map((value, index) => (
           <ListItem button onClick={(e) => handleClick(value, e)} key={value.id}>
-            <ListItemIcon>{index % 2 === 0 ? <AddToDriveIcon /> : <GroupIcon />}</ListItemIcon>
-            <ListItemText classname=''>{value.text}</ListItemText>
+            <ListItemIcon>
+              {value.id === 1 ? (
+                <AddToDriveIcon />
+              ) : value.id === 2 ? (
+                <GroupIcon />
+              ) : (
+                <AutoDeleteIcon />
+              )}
+            </ListItemIcon>
+            <ListItemText>{value.text}</ListItemText>
           </ListItem>
         ))}
       </List>
