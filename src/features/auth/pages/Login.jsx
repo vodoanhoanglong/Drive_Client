@@ -2,7 +2,12 @@ import { useLazyQuery, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { authentication } from 'app/firebaseConfig';
 import { generateDefaultPassword } from 'constants';
-import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
+import {
+  FacebookAuthProvider,
+  GithubAuthProvider,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'firebase/auth';
 import { CREATE_ACCOUNT, LOGIN_BY_ACCOUNT } from 'graphql/Mutation';
 import { GET_USER_BY_EMAIL, GET_USER_BY_ID } from 'graphql/Queries';
 import React from 'react';
@@ -11,8 +16,9 @@ import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { authAction } from '../../../app/authSlice';
-import facebookIcon from '../../../assets/images/login/facebook.svg';
-import googleIcon from '../../../assets/images/login/google.svg';
+import facebookIcon from '../../../assets/icon/login/facebook.svg';
+import googleIcon from '../../../assets/icon/login/google.svg';
+import githubIcon from '../../../assets/icon/login/github.svg';
 
 const schemaValidation = Yup.object({
   email: Yup.string().email('Invalid Email!').required('Email is required!'),
@@ -51,9 +57,23 @@ function Login() {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schemaValidation), mode: 'onChange' });
 
-  const handleLoginWithSocial = (platform) => {
+  const handleLoginWithSocial = (id) => {
     dispatch(authAction.login());
-    const provider = platform === 'google' ? new GoogleAuthProvider() : new FacebookAuthProvider();
+    let provider = null;
+    switch (id) {
+      case 1: //* google login
+        provider = new GoogleAuthProvider();
+        break;
+      case 2: //* facebook login
+        provider = new FacebookAuthProvider();
+        break;
+      case 3: //* github login
+        provider = new GithubAuthProvider();
+        break;
+      default:
+        break;
+    }
+
     signInWithPopup(authentication, provider)
       .then((res) => {
         const user = {
@@ -130,13 +150,17 @@ function Login() {
           <span>or continue with</span>
         </div>
         <div className='auth-social'>
-          <div className='auth-social-item' onClick={() => handleLoginWithSocial('google')}>
+          <div className='auth-social-item' onClick={() => handleLoginWithSocial(1)}>
             <img src={googleIcon} alt='' />
             <span>Continue with Google</span>
           </div>
-          <div className='auth-social-item' onClick={() => handleLoginWithSocial()}>
+          <div className='auth-social-item' onClick={() => handleLoginWithSocial(2)}>
             <img src={facebookIcon} alt='' />
             <span>Continue with Facebook</span>
+          </div>
+          <div className='auth-social-item' onClick={() => handleLoginWithSocial(3)}>
+            <img src={githubIcon} alt='' />
+            <span>Continue with Github</span>
           </div>
         </div>
         <div className='auth-footer'>
