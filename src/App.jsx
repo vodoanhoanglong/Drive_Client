@@ -1,9 +1,10 @@
-import { useMutation } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { authAction } from 'app/authSlice';
 import { authentication } from 'app/firebaseConfig';
 import { generateDefaultPassword } from 'constants';
 import { onAuthStateChanged } from 'firebase/auth';
 import { LOGIN_BY_ACCOUNT } from 'graphql/Mutation';
+import { GET_USER_BY_EMAIL } from 'graphql/Queries';
 import React, { useEffect, useRef } from 'react';
 import { useDispatch } from 'react-redux';
 import { Navigate, Route, Routes as Switch, useNavigate } from 'react-router-dom';
@@ -17,15 +18,23 @@ function App() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [loginByAccount] = useMutation(LOGIN_BY_ACCOUNT);
+  const [getUserByEmail] = useLazyQuery(GET_USER_BY_EMAIL, {
+    onCompleted: (data) => {
+      dispatch(authAction.loginSuccess(data.account[0]));
+      navigate('/drive');
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
   const handleAuthStateChanged = useRef();
-  handleAuthStateChanged.current = (user) => {
+  handleAuthStateChanged.current = (userEmail) => {
     loginByAccount({
-      variables: { email: user.email, password: generateDefaultPassword(user.email) },
+      variables: { email: userEmail, password: generateDefaultPassword(userEmail) },
       onCompleted: (data) => {
         const { access_token } = data.login;
         localStorage.setItem('token', access_token);
-        dispatch(authAction.loginSuccess(user));
-        navigate('/drive');
+        getUserByEmail({ variables: { email: userEmail } });
       },
       onError: (error) => {
         console.log(error);
@@ -35,10 +44,7 @@ function App() {
   useEffect(() => {
     const unregisterAuthObserver = onAuthStateChanged(authentication, (user) => {
       if (user) {
-        handleAuthStateChanged.current({
-          email: user.email,
-          displayName: user.displayName,
-        });
+        handleAuthStateChanged.current(user.email);
       }
     });
     return () => {
