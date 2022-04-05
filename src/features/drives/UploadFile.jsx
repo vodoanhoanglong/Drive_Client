@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-import { getStorage, ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
-import { app } from '../../firebase/base';
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
+import { storage } from '../../app/firebaseConfig';
 import { Button } from '@mui/material';
 import { useMutation } from '@apollo/client';
 import { uploadFile, updateFileUrl } from '../../graphql/Mutation';
@@ -19,14 +19,12 @@ const handleChange = async (
   e,
   pathPrefix,
   addFile,
-  error,
   updateUrl,
   setAllData,
   setProgress,
   progressRef
 ) => {
   const file = e.target.files[0];
-  const storage = getStorage(app);
   const metadata = {
     contentType: file.type,
   };
@@ -35,7 +33,6 @@ const handleChange = async (
   const name = file.name.split('.').slice(0, -1).join('.');
 
   let returningData = '';
-
   await addFile({
     variables: {
       name,
@@ -45,12 +42,8 @@ const handleChange = async (
       extension,
     },
     onCompleted: (data) => (returningData = data),
+    onError: (error) => console.log(`uploadFile error: ${error}`),
   });
-
-  if (error) {
-    console.log(`uploadFile error: ${error}`);
-    return;
-  }
 
   const storageRef = ref(storage, `${pathPrefix}/${file.name}`);
   const uploadTask = uploadBytesResumable(storageRef, file, metadata);
@@ -101,27 +94,17 @@ const handleChange = async (
 };
 
 function UploadFile({ pathPrefix, setAllData, setProgress, progressRef }) {
-  const [addFile, { error }] = useMutation(uploadFile);
+  const [addFile] = useMutation(uploadFile);
   const [updateUrl] = useMutation(updateFileUrl);
-
   return (
     <>
       <label
         htmlFor='contained-button-file'
         onChange={(e) =>
-          handleChange(
-            e,
-            pathPrefix,
-            addFile,
-            error,
-            updateUrl,
-            setAllData,
-            setProgress,
-            progressRef
-          )
+          handleChange(e, pathPrefix, addFile, updateUrl, setAllData, setProgress, progressRef)
         }
       >
-        <Input accept='image/*' id='contained-button-file' multiple type='file' />
+        <Input accept='*' id='contained-button-file' multiple type='file' />
         <Button style={btnStyle} variant='contained' component='span'>
           Upload
         </Button>

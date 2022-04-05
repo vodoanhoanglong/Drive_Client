@@ -1,19 +1,11 @@
 import { gql } from '@apollo/client';
 
-const loginMutation = gql`
-  mutation loginMutation {
-    login(data: { email: "test1@tesst1.com", password: "test" }) {
+const LOGIN_BY_ACCOUNT = gql`
+  mutation loginByAccount($email: String!, $password: String!) {
+    login(data: { email: $email, password: $password }) {
       access_token
       expires_in
       refresh_token
-    }
-  }
-`;
-
-const registerMutation = gql`
-  mutation registerMutation {
-    createAccount(data: { email: "test1@tesst1.com", password: "test", role: "user" }) {
-      id
     }
   }
 `;
@@ -41,7 +33,13 @@ export const uploadFile = gql`
 export const updateFileUrl = gql`
   mutation updateFileUrl($id: String!, $url: String!) {
     update_files_by_pk(pk_columns: { id: $id }, _set: { url: $url }) {
+      id
       url
+      name
+      path
+      extension
+      size
+      accountId
     }
   }
 `;
@@ -54,4 +52,15 @@ export const deleteFile = gql`
   }
 `;
 
-export { loginMutation, registerMutation };
+const CREATE_ACCOUNT = gql`
+  mutation CREATE_ACCOUNT($email: String!, $password: String!, $displayName: String!) {
+    createAccount(
+      data: { email: $email, password: $password, fullName: $displayName, role: "user" }
+    ) {
+      id
+      access_token
+    }
+  }
+`;
+
+export { LOGIN_BY_ACCOUNT, CREATE_ACCOUNT };

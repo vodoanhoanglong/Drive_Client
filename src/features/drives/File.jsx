@@ -12,8 +12,8 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { CardActionArea } from '@mui/material';
 
-import { getStorage, ref, deleteObject } from 'firebase/storage';
-import { app } from '../../firebase/base';
+import { ref, deleteObject } from 'firebase/storage';
+import { storage } from '../../app/firebaseConfig';
 
 import { deleteFile } from '../../graphql/Mutation';
 import { useMutation } from '@apollo/client';
@@ -66,6 +66,7 @@ const handleFileType = (
   deleteExcute,
   setAllData
 ) => {
+  console.log(id);
   if (!img.includes(extension) && !audio.includes(extension) && !video.includes(extension)) {
     return (
       <Item startIcon={<InsertDriveFileIcon />} onClick={() => window.open(url)}>
@@ -113,7 +114,15 @@ const handleFileType = (
         <List sx={styleDivider} component='nav'>
           <ListItem
             button
-            onClick={() => handleDelete(setAnchorEl, pathPrefix, id, deleteExcute, setAllData)}
+            onClick={() =>
+              handleDelete(
+                setAnchorEl,
+                `${pathPrefix}/${name}${extension}`,
+                id,
+                deleteExcute,
+                setAllData
+              )
+            }
           >
             <ListItemText style={styleListItemText} primary='Delete' />
           </ListItem>
@@ -143,8 +152,7 @@ const handleClickIconSetting = (event, setAnchorEl) => {
 
 const handleDelete = async (setAnchorEl, pathPrefix, fileId, deleteExcute, setAllData) => {
   setAnchorEl(null);
-  const storage = getStorage(app);
-
+  console.log(fileId);
   // Create a reference to the file to delete
   const desertRef = ref(storage, pathPrefix);
 
@@ -173,14 +181,7 @@ export default function File(props) {
       <Grid container spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }}>
         {data.map((value, index) => (
           <Grid item xs={2} sm={4} md={4} key={index}>
-            {handleFileType(
-              value,
-              anchorEl,
-              setAnchorEl,
-              `${pathPrefix}/${value.name}${value.extension}`,
-              deleteExcute,
-              setAllData
-            )}
+            {handleFileType(value, anchorEl, setAnchorEl, pathPrefix, deleteExcute, setAllData)}
           </Grid>
         ))}
       </Grid>

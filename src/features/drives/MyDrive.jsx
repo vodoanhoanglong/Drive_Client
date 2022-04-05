@@ -1,18 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import { useLazyQuery } from '@apollo/client';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import File from './File';
 import Folder from './Folder';
 import UploadFile from './UploadFile';
-import fakeData from './data.json';
 
-import { useLazyQuery } from '@apollo/client';
 import { getMyFiles } from 'graphql/Queries';
 import CreateFolder from './CreateFolder';
 import LinearProgress from '@mui/material/LinearProgress';
 import { Box } from '@mui/system';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 const workspaces = 'Workspaces';
-const userId = '4b98a8b5-3517-4948-b6af-e46762af9d3e';
 
 const styleProgress = {
   position: 'absolute',
@@ -33,13 +32,14 @@ const handleData = (data, path) => {
 };
 
 function MyDrive({ setAlert }) {
+  const userId = useSelector((state) => state.auth.currentUser.id);
   const [pathPrefix, setPathPrefix] = useState(userId);
   const [pathName, setPathName] = useState(workspaces);
   const [progress, setProgress] = useState(0);
   const [allData, setAllData] = useState([]);
   const progressRef = React.useRef(null);
 
-  const [getAllFiles, { data }] = useLazyQuery(getMyFiles, {
+  const [getAllFiles] = useLazyQuery(getMyFiles, {
     variables: {
       path: userId + '%',
     },
@@ -47,9 +47,13 @@ function MyDrive({ setAlert }) {
 
   // fetch data
   useEffect(() => {
-    getAllFiles();
-    if (data) setAllData(data.files);
-  }, [data, getAllFiles]);
+    getAllFiles({
+      onCompleted: (data) => {
+        console.log(allData);
+        setAllData(data.files);
+      },
+    });
+  }, [allData, getAllFiles]);
 
   const result = handleData(allData, pathPrefix);
 
