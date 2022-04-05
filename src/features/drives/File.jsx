@@ -18,6 +18,12 @@ import { deleteFile } from '../../graphql/Mutation';
 import { useMutation } from '@apollo/client';
 import DeleteIcon from '@mui/icons-material/Delete';
 
+import imgDocx from '../../assets/icon/file-icon/docx.svg';
+import imgPdf from '../../assets/icon/file-icon/pdf.svg';
+import imgPpt from '../../assets/icon/file-icon/ppt.svg';
+import imgTxt from '../../assets/icon/file-icon/txt.svg';
+import imgXlsx from '../../assets/icon/file-icon/xlsx.svg';
+
 const Item = styled(Button)(({ theme }) => ({
   backgroundColor: '#1A2027',
   padding: theme.spacing(2),
@@ -46,6 +52,7 @@ const styleImage = { objectFit: 'contain' };
 const img = ['.png', '.jpeg', '.jpg', '.gif', '.bmp'];
 const audio = ['.mp3', '.wav', '.ogg', '.flac'];
 const video = ['.mp4', '.avi', '.mkv', '.mov', '.wmv'];
+const documents = ['.docx', '.pdf', '.ppt', '.txt', '.xlsx'];
 
 const handleExtension = (extension) => {
   if (img.includes(extension)) {
@@ -54,6 +61,25 @@ const handleExtension = (extension) => {
     return 'audio';
   } else if (video.includes(extension)) {
     return 'video';
+  }
+
+  return 'iframe';
+};
+
+const handleImage = (extension, url) => {
+  switch (extension) {
+    case '.docx':
+      return imgDocx;
+    case '.pdf':
+      return imgPdf;
+    case '.ppt':
+      return imgPdf;
+    case '.txt':
+      return imgTxt;
+    case '.xlsx':
+      return imgXlsx;
+    default:
+      return url;
   }
 };
 
@@ -87,7 +113,8 @@ export default function File(props) {
           <Grid item xs={2} sm={4} md={4} key={index}>
             {!img.includes(value.extension) &&
             !audio.includes(value.extension) &&
-            !video.includes(value.extension) ? (
+            !video.includes(value.extension) &&
+            !documents.includes(value.extension) ? (
               <Item startIcon={<InsertDriveFileIcon />} onClick={() => window.open(value.url)}>
                 {value.name}
                 {value.extension}
@@ -99,7 +126,7 @@ export default function File(props) {
                     style={styleImage}
                     component={handleExtension(value.extension)}
                     height='140'
-                    src={value.url}
+                    src={handleImage(value.extension, value.url)}
                     alt='green iguana'
                     onClick={() => window.open(value.url)}
                   />

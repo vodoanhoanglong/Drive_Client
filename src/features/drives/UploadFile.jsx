@@ -6,7 +6,6 @@ import { storage } from '../../app/firebaseConfig';
 import { Button } from '@mui/material';
 import { useMutation } from '@apollo/client';
 import { uploadFile, updateFileUrl } from '../../graphql/Mutation';
-import { getMyFiles } from '../../graphql/Queries';
 
 const Input = styled('input')({
   display: 'none',
@@ -30,9 +29,27 @@ const handleChange = async (
     contentType: file.type,
   };
 
-  const extension = `.${file.type.split('/')[1]}`;
-  const name = file.name.split('.').slice(0, -1).join('.');
+  let extension = `.${file.type.split('/')[1]}`;
 
+  switch (extension) {
+    case '.vnd.ms-excel':
+    case '.vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+      extension = '.xlsx';
+      break;
+    case '.plain':
+      extension = '.txt';
+      break;
+    case '.vnd.openxmlformats-officedocument.wordprocessingml.document':
+      extension = '.docx';
+      break;
+    case '.vnd.openxmlformats-officedocument.presentationml.presentation':
+      extension = '.ppt';
+      break;
+    default:
+      break;
+  }
+
+  const name = file.name.split('.').slice(0, -1).join('.');
   let returningData = '';
   await addFile({
     variables: {
