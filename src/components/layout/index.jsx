@@ -2,11 +2,16 @@ import { Box } from '@mui/system';
 import MyDrive from 'features/drives/MyDrive';
 import Search from 'features/search/Search';
 import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+
 import ShowToast from '../common/ShowToast';
 import SideBar from 'features/menu/SideBar';
 import { AppBar, Divider, Toolbar, Typography } from '@mui/material';
 import ShareDrive from 'features/menu/ShareDrive';
 import Repo from 'features/menu/Repo';
+import { useLazyQuery } from '@apollo/client';
+import { getMyFiles } from '../../graphql/Queries';
+
 const Layout = () => {
   const [alert, setAlert] = useState({
     show: false,
@@ -14,6 +19,13 @@ const Layout = () => {
     text: '',
   });
   const [contentID, setContentID] = useState(1);
+  const userId = useSelector((state) => state.auth.currentUser.id);
+
+  const [getAllFiles] = useLazyQuery(getMyFiles, {
+    variables: {
+      path: userId + '%',
+    },
+  });
 
   return (
     <Box className='layout'>
@@ -26,7 +38,9 @@ const Layout = () => {
       </Box>
       <Box className='layout-main'>
         {/* <MyDrive setAlert={setAlert} /> */}
-        {contentID === 1 && <MyDrive setAlert={setAlert} />}
+        {contentID === 1 && (
+          <MyDrive setAlert={setAlert} getFileQueries={getAllFiles} type='files' userId={userId} />
+        )}
         {contentID === 2 && <ShareDrive />}
         {contentID === 3 && <Repo />}
         <ShowToast showToast={alert} />
