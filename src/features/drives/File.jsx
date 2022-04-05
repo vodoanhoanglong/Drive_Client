@@ -23,6 +23,7 @@ import imgPdf from '../../assets/icon/file-icon/pdf.svg';
 import imgPpt from '../../assets/icon/file-icon/ppt.svg';
 import imgTxt from '../../assets/icon/file-icon/txt.svg';
 import imgXlsx from '../../assets/icon/file-icon/xlsx.svg';
+import imgEmpty from '../../assets/icon/file-icon/empty-folder.png';
 
 const Item = styled(Button)(({ theme }) => ({
   backgroundColor: '#1A2027',
@@ -48,6 +49,15 @@ const styleCardIcon = {
 };
 
 const styleImage = { objectFit: 'contain' };
+const styleEmpty = {
+  display: 'inline-block',
+  textAlign: 'center',
+  margin: '0 auto',
+};
+const styleEmptyImg = {
+  height: '120px',
+  width: '120px',
+};
 
 const img = ['.png', '.jpeg', '.jpg', '.gif', '.bmp'];
 const audio = ['.mp3', '.wav', '.ogg', '.flac'];
@@ -73,7 +83,7 @@ const handleImage = (extension, url) => {
     case '.pdf':
       return imgPdf;
     case '.ppt':
-      return imgPdf;
+      return imgPpt;
     case '.txt':
       return imgTxt;
     case '.xlsx':
@@ -109,44 +119,53 @@ export default function File(props) {
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={{ xs: 2, md: 4 }} columns={{ xs: 4, sm: 8, md: 12 }}>
-        {data.map((value, index) => (
-          <Grid item xs={2} sm={4} md={4} key={index}>
-            {!img.includes(value.extension) &&
-            !audio.includes(value.extension) &&
-            !video.includes(value.extension) &&
-            !documents.includes(value.extension) ? (
-              <Item startIcon={<InsertDriveFileIcon />} onClick={() => window.open(value.url)}>
-                {value.name}
-                {value.extension}
-              </Item>
-            ) : (
-              <Card sx={{ maxWidth: 345 }}>
-                <CardActionArea>
-                  <CardMedia
-                    style={styleImage}
-                    component={handleExtension(value.extension)}
-                    height='140'
-                    src={handleImage(value.extension, value.url)}
-                    alt='green iguana'
-                    onClick={() => window.open(value.url)}
-                  />
-                  <CardContent style={styleContent}>
-                    <Typography gutterBottom variant='h5' component='div'>
-                      {value.name}
-                      {value.extension}
-                    </Typography>
-                    <DeleteIcon
-                      style={styleCardIcon}
-                      onClick={() =>
-                        handleDelete(value.id, `${pathPrefix}/${value.name}${value.extension}`)
-                      }
+        {data.length !== 0 ? (
+          data.map((value, index) => (
+            <Grid item xs={2} sm={4} md={4} key={index}>
+              {!img.includes(value.extension) &&
+              !audio.includes(value.extension) &&
+              !video.includes(value.extension) &&
+              !documents.includes(value.extension) ? (
+                <Item startIcon={<InsertDriveFileIcon />} onClick={() => window.open(value.url)}>
+                  {value.name}
+                  {value.extension}
+                </Item>
+              ) : (
+                <Card sx={{ maxWidth: 345 }}>
+                  <CardActionArea>
+                    <CardMedia
+                      style={styleImage}
+                      component={handleExtension(value.extension)}
+                      height='140'
+                      src={handleImage(value.extension, value.url)}
+                      alt='green iguana'
+                      onClick={() => window.open(value.url)}
                     />
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            )}
-          </Grid>
-        ))}
+                    <CardContent style={styleContent}>
+                      <Typography gutterBottom variant='h5' component='div'>
+                        {value.name}
+                        {value.extension}
+                      </Typography>
+                      <DeleteIcon
+                        style={styleCardIcon}
+                        onClick={() =>
+                          handleDelete(value.id, `${pathPrefix}/${value.name}${value.extension}`)
+                        }
+                      />
+                    </CardContent>
+                  </CardActionArea>
+                </Card>
+              )}
+            </Grid>
+          ))
+        ) : (
+          <div style={styleEmpty}>
+            <img src={imgEmpty} style={styleEmptyImg} alt='' />
+            <h1>
+              <b>No any file</b>
+            </h1>
+          </div>
+        )}
       </Grid>
     </Box>
   );
