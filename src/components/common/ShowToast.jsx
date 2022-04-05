@@ -8,8 +8,10 @@ const styleToast = {
   textTransform: 'uppercase',
   fontWeight: 'bold',
   display: 'flex',
-  backgroundColor: '#b5e6b5',
   alignItems: 'center',
+  width: '250px',
+  height: '50px',
+  borderRadius: '6px',
 };
 
 function SlideTransition(props) {
@@ -22,17 +24,19 @@ const ShowToast = ({ showToast }) => {
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       open={showToast.show}
       TransitionComponent={SlideTransition}
-      message={
-        <div style={styleToast}>
-          {showToast.error ? (
-            <ErrorOutlineIcon style={{ color: 'red', paddingRight: 2 }} fontSize='medium' />
-          ) : (
-            <CheckIcon style={{ color: 'green', paddingRight: 2 }} fontSize='medium' />
-          )}
+    >
+      {showToast.error ? (
+        <div style={{ ...styleToast, backgroundColor: '#fca5a5', color: '#cf4a4a' }}>
+          <ErrorOutlineIcon style={{ color: '#cf4a4a', padding: '0 6px' }} fontSize='large' />
           {showToast.text}
         </div>
-      }
-    />
+      ) : (
+        <div style={{ ...styleToast, backgroundColor: '#bbf7d0', color: '#34d399' }}>
+          <CheckIcon style={{ color: '#34d399', padding: '0 6px' }} fontSize='large' />
+          {showToast.text}
+        </div>
+      )}
+    </Snackbar>
   );
 };
 
