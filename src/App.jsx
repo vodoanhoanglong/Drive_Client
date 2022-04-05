@@ -1,47 +1,65 @@
-import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-import React from 'react';
-import { Navigate, Route, Routes as Switch } from 'react-router-dom';
+import { useMutation } from '@apollo/client';
+import { authAction } from 'app/authSlice';
+import { authentication } from 'app/firebaseConfig';
+import { generateDefaultPassword } from 'constants';
+import { onAuthStateChanged } from 'firebase/auth';
+import { LOGIN_BY_ACCOUNT } from 'graphql/Mutation';
+import React, { useEffect, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { Navigate, Route, Routes as Switch, useNavigate } from 'react-router-dom';
 import { NotFound, ProtectedRoute } from './components/common';
 import Layout from './components/layout';
 import Login from './features/auth/pages/Login';
-import SideBar from './features/menu/SideBar';
 import Register from './features/auth/pages/Register';
-
-const httpLink = createHttpLink({
-  uri: 'http://localhost:8080/v1/graphql',
-});
-const authLink = setContext((_, { headers }) => {
-  const token = localStorage.getItem('token');
-  return {
-    headers: {
-      ...headers,
-      authorization: token ? `Bearer ${token}` : '',
-    },
-  };
-});
-
-const client = new ApolloClient({
-  link: authLink.concat(httpLink),
-  cache: new InMemoryCache(),
-});
+import SideBar from './features/menu/SideBar';
 
 function App() {
-  return (
-    <ApolloProvider client={client}>
-      <Switch>
-        {/* <Route path='/dashboard' element={<Search_filter />} /> */}
-        <Route path='/' element={<Navigate to='/drive' />} />
-        <Route path='/login' element={<Login />} />
-        <Route path='/register' element={<Register />} />
-        <Route path='/menu' element={<SideBar />} />
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [loginByAccount] = useMutation(LOGIN_BY_ACCOUNT);
+  const handleAuthStateChanged = useRef();
+  handleAuthStateChanged.current = (user) => {
+    loginByAccount({
+      variables: { email: user.email, password: generateDefaultPassword(user.email) },
+      onCompleted: (data) => {
+        const { access_token } = data.login;
+        localStorage.setItem('token', access_token);
+        dispatch(authAction.loginSuccess(user));
+        navigate('/drive');
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    });
+  };
+  useEffect(() => {
+    const unregisterAuthObserver = onAuthStateChanged(authentication, (user) => {
+      if (user) {
+        handleAuthStateChanged.current({
+          email: user.email,
+          displayName: user.displayName,
+        });
+      }
+    });
+    return () => {
+      unregisterAuthObserver();
+      localStorage.removeItem('token');
+    };
+  }, []);
 
-        <Route element={<ProtectedRoute />}>
-          <Route path='/drive/*' element={<Layout />} />
-        </Route>
-        <Route path='*' element={<NotFound />} />
-      </Switch>
-    </ApolloProvider>
+  return (
+    <Switch>
+      {/* <Route path='/dashboard' element={<Search_filter />} /> */}
+      <Route path='/' element={<Navigate to='/drive' />} />
+      <Route path='/login' element={<Login />} />
+      <Route path='/register' element={<Register />} />
+      <Route path='/menu' element={<SideBar />} />
+
+      <Route element={<ProtectedRoute />}>
+        <Route path='/drive/*' element={<Layout />} />
+      </Route>
+      <Route path='*' element={<NotFound />} />
+    </Switch>
   );
 }
 

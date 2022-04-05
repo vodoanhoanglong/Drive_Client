@@ -1,6 +1,7 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { authentication } from 'app/firebaseConfig';
+import { generateDefaultPassword } from 'constants';
 import { FacebookAuthProvider, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 import { CREATE_ACCOUNT, LOGIN_BY_ACCOUNT } from 'graphql/Mutation';
 import { GET_USER_BY_EMAIL, GET_USER_BY_ID } from 'graphql/Queries';
@@ -57,7 +58,7 @@ function Login() {
       .then((res) => {
         const user = {
           email: res.user.email,
-          password: res.user.uid,
+          password: generateDefaultPassword(res.user.email),
           displayName: res.user.displayName,
         };
         createAccount({
@@ -88,8 +89,20 @@ function Login() {
       });
   };
 
-  const handleLogin = (data) => {
-    console.log(data);
+  const handleLogin = (values) => {
+    dispatch(authAction.login());
+    loginByAccount({
+      variables: { email: values.email, password: values.password },
+      onCompleted: (data) => {
+        const { access_token } = data.login;
+        localStorage.setItem('token', access_token);
+        getUserByEmail({ variables: { email: values.email } });
+      },
+      onError: (error) => {
+        dispatch(authAction.loginFailure());
+        console.error(error);
+      },
+    });
   };
 
   return (
