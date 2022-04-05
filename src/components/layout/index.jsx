@@ -10,6 +10,7 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getMyFiles } from '../../graphql/Queries';
+import { GET_FILE_SHARE } from '../../graphql/Queries';
 import ShowToast from '../common/ShowToast';
 import { authentication } from '../../app/firebaseConfig';
 import { signOut } from 'firebase/auth';
@@ -31,6 +32,7 @@ const Layout = () => {
       path: userId + '%',
     },
   });
+  const [getFileShare] = useLazyQuery(GET_FILE_SHARE);
 
   return (
     <Box className='layout'>
@@ -66,8 +68,14 @@ const Layout = () => {
         {contentID === 1 && (
           <MyDrive setAlert={setAlert} getFileQueries={getAllFiles} type='files' userId={userId} />
         )}
-        {/* {contentID === 1 && <MyDrive setAlert={setAlert} />} */}
-        {contentID === 2 && <ShareDrive />}
+        {contentID === 2 && (
+          <MyDrive
+            setAlert={setAlert}
+            getFileQueries={getFileShare}
+            type='shares'
+            userId={userId}
+          />
+        )}
         {contentID === 3 && <Repo />}
         <ShowToast showToast={alert} />
       </Box>
