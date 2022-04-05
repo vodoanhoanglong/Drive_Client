@@ -15,9 +15,10 @@ const styleProgress = {
   display: 'none',
 };
 
-const handleData = (data, path) => {
+const handleData = (data, path, type) => {
   const listItem = [];
   const length = path.split('/').length + 1;
+  if (type === 'shares' && length === 2) return data;
 
   data.map((item) => {
     const file = item.path.startsWith(`${path}/`);
@@ -38,12 +39,15 @@ function MyDrive({ setAlert, getFileQueries, type, userId }) {
   useEffect(() => {
     getFileQueries({
       onCompleted: (data) => {
-        setAllData(data[type]);
+        if (type === 'files') setAllData(data[type]);
+        else if (type === 'shares') {
+          setAllData((prevData) => [...prevData, ...data[type].map((item) => item.file)]);
+        }
       },
     });
   }, [getFileQueries]);
 
-  const result = handleData(allData, pathPrefix);
+  const result = handleData(allData, pathPrefix, type);
 
   let fileList = [];
   let folderList = [];
