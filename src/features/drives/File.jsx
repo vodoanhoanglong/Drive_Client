@@ -24,6 +24,7 @@ import imgPpt from '../../assets/icon/file-icon/ppt.svg';
 import imgTxt from '../../assets/icon/file-icon/txt.svg';
 import imgXlsx from '../../assets/icon/file-icon/xlsx.svg';
 import imgEmpty from '../../assets/icon/file-icon/empty-folder.png';
+import ShareFile from './ShareFile';
 
 const Item = styled(Button)(({ theme }) => ({
   backgroundColor: '#1A2027',
@@ -48,7 +49,7 @@ const styleCardIcon = {
   fontSize: 20,
 };
 
-const styleImage = { objectFit: 'contain' };
+const styleImage = { objectFit: 'cover' };
 const styleEmpty = {
   display: 'inline-block',
   textAlign: 'center',
@@ -57,6 +58,11 @@ const styleEmpty = {
 const styleEmptyImg = {
   height: '120px',
   width: '120px',
+};
+const styleContainIcon = {
+  width: '25%',
+  display: 'flex',
+  justifyContent: 'space-between',
 };
 
 const img = ['.png', '.jpeg', '.jpg', '.gif', '.bmp'];
@@ -146,12 +152,15 @@ export default function File(props) {
                         {value.name}
                         {value.extension}
                       </Typography>
-                      <DeleteIcon
-                        style={styleCardIcon}
-                        onClick={() =>
-                          handleDelete(value.id, `${pathPrefix}/${value.name}${value.extension}`)
-                        }
-                      />
+                      <div style={styleContainIcon}>
+                        <DeleteIcon
+                          style={styleCardIcon}
+                          onClick={() =>
+                            handleDelete(value.id, `${pathPrefix}/${value.name}${value.extension}`)
+                          }
+                        />
+                        <ShareFile fileId={value.id} />
+                      </div>
                     </CardContent>
                   </CardActionArea>
                 </Card>

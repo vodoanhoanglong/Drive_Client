@@ -20,6 +20,25 @@ export const checkFileName = gql`
     }
   }
 `;
+
+export const GET_FILE_SHARE = gql`
+  query getFileShare {
+    shares {
+      fileId
+      accountId
+      account {
+        fullName
+      }
+      file {
+        name
+        account {
+          fullName
+        }
+      }
+    }
+  }
+`;
+
 const GET_USER_BY_ID = gql`
   query GET_USER_BY_ID($ID: String!) {
     account(where: { id: { _eq: $ID } }) {

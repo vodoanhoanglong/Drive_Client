@@ -30,6 +30,15 @@ export const uploadFile = gql`
   }
 `;
 
+export const SHARE_FILE = gql`
+  mutation shareFile($fileId: String!, $shareToUserId: String!) {
+    insert_shares_one(object: { fileId: $fileId, accountId: $shareToUserId }) {
+      fileId
+      accountId
+    }
+  }
+`;
+
 export const updateFileUrl = gql`
   mutation updateFileUrl($id: String!, $url: String!) {
     update_files_by_pk(pk_columns: { id: $id }, _set: { url: $url }) {
