@@ -1,21 +1,25 @@
-import * as React from 'react';
+import { useMutation } from '@apollo/client';
+import { DialogTitle } from '@mui/material';
 import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import { useMutation } from '@apollo/client';
+import TextField from '@mui/material/TextField';
+import * as React from 'react';
 import { uploadFile } from '../../graphql/Mutation';
 
 const btnStyle = {
-  fontSize: '1.5rem',
+  fontSize: '1.4rem',
   marginLeft: '2.5rem',
+};
+const dialogContentStyle = {
+  width: '400px',
+  height: '115px',
 };
 
 export default function CreateFolder({ pathPrefix, setAllData, setAlert }) {
   const [open, setOpen] = React.useState(false);
   const [name, setName] = React.useState('');
-
   const [startCheck] = useMutation(uploadFile);
 
   const handleClickOpen = () => {
@@ -64,8 +68,6 @@ export default function CreateFolder({ pathPrefix, setAllData, setAlert }) {
       () =>
         setAlert({
           show: false,
-          error: false,
-          text: '',
         }),
       3000
     );
@@ -76,8 +78,9 @@ export default function CreateFolder({ pathPrefix, setAllData, setAlert }) {
       <Button style={btnStyle} variant='contained' onClick={handleClickOpen}>
         Create Folder
       </Button>
-      <Dialog open={open} onClose={handleClose}>
-        <DialogContent>
+      <Dialog open={open} onClose={handleClose} aria-labelledby='alert-dialog-title'>
+        <DialogTitle id='alert-dialog-title'>{'Tạo Thư Mục Mới'}</DialogTitle>
+        <DialogContent style={dialogContentStyle}>
           <TextField
             autoFocus
             margin='dense'
@@ -88,11 +91,11 @@ export default function CreateFolder({ pathPrefix, setAllData, setAlert }) {
             variant='standard'
             onChange={onChange}
           />
+          <DialogActions>
+            <Button onClick={handleClose}>Cancel</Button>
+            <Button onClick={handleConfirm}>Confirm</Button>
+          </DialogActions>
         </DialogContent>
-        <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={handleConfirm}>Confirm</Button>
-        </DialogActions>
       </Dialog>
     </div>
   );

@@ -5,9 +5,11 @@
   grid-template-areas: "header header" "sidebar main";
   min-height: 100vh;
   &-header {
+    @include flex(center, center);
     grid-area: header;
     height: 65px;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    
   }
 
   &-sidebar {
