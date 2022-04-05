@@ -1,12 +1,10 @@
 .Search {
-    background-color: white; 
+    background-color: transparent; 
     .searchInputs {
-      display: flex;
-      width: 723px;
-      height: 48px;
+      @include flex(center, center);
       margin: 0 auto;
       text-align: left;
-      align-items: center;
+      width: 700px;
       position: relative;
       padding: 0px  30px;
       background-color: rgb(223, 217, 217);

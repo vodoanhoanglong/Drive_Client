@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 const LOGIN_BY_ACCOUNT = gql`
-  mutation loginByAccount($email: String!, $password: String!) {
+  mutation LOGIN_BY_ACCOUNT($email: String!, $password: String!) {
     login(data: { email: $email, password: $password }) {
       access_token
       expires_in
@@ -25,6 +25,15 @@ export const uploadFile = gql`
       path
       extension
       size
+      accountId
+    }
+  }
+`;
+
+export const SHARE_FILE = gql`
+  mutation shareFile($fileId: String!, $shareToUserId: String!) {
+    insert_shares_one(object: { fileId: $fileId, accountId: $shareToUserId }) {
+      fileId
       accountId
     }
   }

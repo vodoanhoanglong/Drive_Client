@@ -20,8 +20,27 @@ export const checkFileName = gql`
     }
   }
 `;
+
+export const GET_FILE_SHARE = gql`
+  query getFileShare {
+    shares {
+      fileId
+      accountId
+      account {
+        fullName
+      }
+      file {
+        name
+        account {
+          fullName
+        }
+      }
+    }
+  }
+`;
+
 const GET_USER_BY_ID = gql`
-  query getAccountInfo($ID: String!) {
+  query GET_USER_BY_ID($ID: String!) {
     account(where: { id: { _eq: $ID } }) {
       id
       email
@@ -31,7 +50,7 @@ const GET_USER_BY_ID = gql`
   }
 `;
 const GET_USER_BY_EMAIL = gql`
-  query getAccountInfo($email: String!) {
+  query GET_USER_BY_EMAIL($email: String!) {
     account(where: { email: { _eq: $email } }) {
       id
       fullName
