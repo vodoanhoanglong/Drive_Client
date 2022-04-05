@@ -2,9 +2,8 @@ import * as React from 'react';
 import { experimentalStyled as styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { Button, Divider, List, ListItem, ListItemText, Popover } from '@mui/material';
+import { Button } from '@mui/material';
 import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -40,17 +39,6 @@ const styleContent = {
 const styleCardIcon = {
   color: '#ffff',
   fontSize: 20,
-};
-
-const styleDivider = {
-  width: '100%',
-  maxWidth: 360,
-  bgcolor: 'background.paper',
-};
-
-const styleListItemText = {
-  fontSize: '1.5rem',
-  fonWeight: 'bold',
 };
 
 const styleImage = { objectFit: 'contain' };
