@@ -1,15 +1,14 @@
 import { useLazyQuery } from '@apollo/client';
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+import LinearProgress from '@mui/material/LinearProgress';
+import { Box } from '@mui/system';
+import { getMyFiles } from 'graphql/Queries';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
+import CreateFolder from './CreateFolder';
 import File from './File';
 import Folder from './Folder';
 import UploadFile from './UploadFile';
-
-import { getMyFiles } from 'graphql/Queries';
-import CreateFolder from './CreateFolder';
-import LinearProgress from '@mui/material/LinearProgress';
-import { Box } from '@mui/system';
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
 
 const workspaces = 'Workspaces';
 
