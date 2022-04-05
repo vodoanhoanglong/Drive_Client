@@ -12,7 +12,6 @@ import { NotFound, ProtectedRoute } from './components/common';
 import Layout from './components/layout';
 import Login from './features/auth/pages/Login';
 import Register from './features/auth/pages/Register';
-import SideBar from './features/menu/SideBar';
 
 function App() {
   const navigate = useNavigate();
@@ -29,6 +28,7 @@ function App() {
   });
   const handleAuthStateChanged = useRef();
   handleAuthStateChanged.current = (userEmail) => {
+    dispatch(authAction.login());
     loginByAccount({
       variables: { email: userEmail, password: generateDefaultPassword(userEmail) },
       onCompleted: (data) => {
@@ -37,7 +37,8 @@ function App() {
         getUserByEmail({ variables: { email: userEmail } });
       },
       onError: (error) => {
-        console.log(error);
+        // console.log(error);
+        dispatch(authAction.loginFailure());
       },
     });
   };
@@ -59,7 +60,7 @@ function App() {
       <Route path='/' element={<Navigate to='/drive' />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
-      <Route path='/menu' element={<SideBar />} />
+      {/* <Route path='/menu' element={<SideBar />} /> */}
 
       <Route element={<ProtectedRoute />}>
         <Route path='/drive/*' element={<Layout />} />

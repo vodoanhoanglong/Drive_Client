@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 const LOGIN_BY_ACCOUNT = gql`
-  mutation loginByAccount($email: String!, $password: String!) {
+  mutation LOGIN_BY_ACCOUNT($email: String!, $password: String!) {
     login(data: { email: $email, password: $password }) {
       access_token
       expires_in
