@@ -30,17 +30,7 @@ function Login() {
   const dispatch = useDispatch();
   const [createAccount] = useMutation(CREATE_ACCOUNT);
   const [loginByAccount] = useMutation(LOGIN_BY_ACCOUNT);
-
-  const [getUserByEmail] = useLazyQuery(GET_USER_BY_EMAIL, {
-    onCompleted: (data) => {
-      dispatch(authAction.loginSuccess(data.account[0]));
-      navigate('/drive');
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
-
+  const [getUserByEmail] = useLazyQuery(GET_USER_BY_EMAIL);
   const [getUserByID] = useLazyQuery(GET_USER_BY_ID, {
     onCompleted: (data) => {
       dispatch(authAction.loginSuccess(data.account[0]));
@@ -81,20 +71,22 @@ function Login() {
           password: generateDefaultPassword(res.user.email),
           displayName: res.user.displayName,
         };
+
         createAccount({
           variables: { ...user },
-          onCompleted: (data) => {
+          onCompleted: async (data) => {
             const { id, access_token } = data.createAccount;
+            console.log(access_token);
             localStorage.setItem('token', access_token);
-            getUserByID({ variables: { ID: id } });
+            await getUserByID({ variables: { ID: id } });
           },
           onError: (error) => {
             loginByAccount({
               variables: { email: user.email, password: user.password },
-              onCompleted: (data) => {
+              onCompleted: async (data) => {
                 const { access_token } = data.login;
                 localStorage.setItem('token', access_token);
-                getUserByEmail({ variables: { email: user.email } });
+                await getUserByEmail({ variables: { email: user.email } });
               },
               onError: (error) => {
                 console.error(error);

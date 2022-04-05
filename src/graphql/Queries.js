@@ -21,7 +21,7 @@ export const checkFileName = gql`
   }
 `;
 const GET_USER_BY_ID = gql`
-  query getAccountInfo($ID: String!) {
+  query GET_USER_BY_ID($ID: String!) {
     account(where: { id: { _eq: $ID } }) {
       id
       email
@@ -31,7 +31,7 @@ const GET_USER_BY_ID = gql`
   }
 `;
 const GET_USER_BY_EMAIL = gql`
-  query getAccountInfo($email: String!) {
+  query GET_USER_BY_EMAIL($email: String!) {
     account(where: { email: { _eq: $email } }) {
       id
       fullName
