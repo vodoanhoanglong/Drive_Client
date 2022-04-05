@@ -49,7 +49,7 @@ const styleCardIcon = {
   fontSize: 20,
 };
 
-const styleImage = { objectFit: 'contain' };
+const styleImage = { objectFit: 'cover' };
 const styleEmpty = {
   display: 'inline-block',
   textAlign: 'center',
