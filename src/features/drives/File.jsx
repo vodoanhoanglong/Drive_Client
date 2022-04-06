@@ -137,7 +137,7 @@ export default function File(props) {
                   {value.extension}
                 </Item>
               ) : (
-                <Card sx={{ maxWidth: 345 }}>
+                <Card sx={{ maxWidth: 345 }} onClick={() => window.open(value.url)}>
                   <CardActionArea>
                     <CardMedia
                       style={styleImage}
@@ -145,7 +145,6 @@ export default function File(props) {
                       height='140'
                       src={handleImage(value.extension, value.url)}
                       alt='green iguana'
-                      onClick={() => window.open(value.url)}
                     />
                     <CardContent style={styleContent}>
                       <Typography gutterBottom variant='h5' component='div'>
