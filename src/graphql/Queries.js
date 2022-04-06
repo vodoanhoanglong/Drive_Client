@@ -30,10 +30,12 @@ export const GET_FILE_SHARE = gql`
         fullName
       }
       file {
+        id
         name
-        account {
-          fullName
-        }
+        path
+        size
+        extension
+        url
       }
     }
   }

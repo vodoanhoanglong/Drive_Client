@@ -45,7 +45,7 @@ export default function Folder(props) {
           data.map((value) => (
             <Grid item xs={2} sm={4} md={4} key={value.id}>
               <Item startIcon={<FolderIcon />} onClick={handleClick(value.id, value.name)}>
-                {value.name}
+                <p style={{ textTransform: 'none' }}>{value.name}</p>
               </Item>
             </Grid>
           ))

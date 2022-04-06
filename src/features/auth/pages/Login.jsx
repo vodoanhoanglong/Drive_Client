@@ -108,7 +108,13 @@ function Login() {
       onCompleted: (data) => {
         const { access_token } = data.login;
         localStorage.setItem('token', access_token);
-        getUserByEmail({ variables: { email: values.email } });
+        getUserByEmail({
+          variables: { email: values.email },
+          onCompleted: (data) => {
+            dispatch(authAction.loginSuccess(data.account[0]));
+            navigate('/drive');
+          },
+        });
       },
       onError: (error) => {
         dispatch(authAction.loginFailure());
