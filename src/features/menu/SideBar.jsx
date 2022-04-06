@@ -15,7 +15,7 @@ const routing = [
   },
   {
     id: 2,
-    text: 'Được chia sẽ với tôi',
+    text: 'Được chia sẻ với tôi',
   },
   {
     id: 3,

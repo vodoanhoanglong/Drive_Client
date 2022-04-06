@@ -49,7 +49,7 @@ const styleCardIcon = {
   fontSize: 20,
 };
 
-const styleImage = { objectFit: 'cover' };
+const styleImage = { objectFit: 'contain' };
 const styleEmpty = {
   display: 'inline-block',
   textAlign: 'center',
@@ -100,7 +100,7 @@ const handleImage = (extension, url) => {
 };
 
 export default function File(props) {
-  const { data, pathPrefix, setAllData } = props;
+  const { data, pathPrefix, setAllData, type } = props;
   const [deleteExcute] = useMutation(deleteFile);
 
   const handleDelete = async (id, pathPrefix) => {
@@ -159,7 +159,8 @@ export default function File(props) {
                             handleDelete(value.id, `${pathPrefix}/${value.name}${value.extension}`)
                           }
                         />
-                        <ShareFile fileId={value.id} />
+
+                        {type !== 'shares' && <ShareFile fileId={value.id} />}
                       </div>
                     </CardContent>
                   </CardActionArea>

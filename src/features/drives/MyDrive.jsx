@@ -81,15 +81,17 @@ function MyDrive({ setAlert, getFileQueries, type, userId }) {
           />
           <h3>{pathName}</h3>
         </div>
-        <div style={{ display: 'flex' }}>
-          <UploadFile
-            pathPrefix={pathPrefix}
-            setAllData={setAllData}
-            setProgress={setProgress}
-            progressRef={progressRef}
-          />
-          <CreateFolder setAllData={setAllData} pathPrefix={pathPrefix} setAlert={setAlert} />
-        </div>
+        {type !== 'shares' && (
+          <div style={{ display: 'flex' }}>
+            <UploadFile
+              pathPrefix={pathPrefix}
+              setAllData={setAllData}
+              setProgress={setProgress}
+              progressRef={progressRef}
+            />
+            <CreateFolder setAllData={setAllData} pathPrefix={pathPrefix} setAlert={setAlert} />
+          </div>
+        )}
       </div>
       <h2 className='drives__heading'>
         <b>Thư mục</b>
@@ -100,7 +102,7 @@ function MyDrive({ setAlert, getFileQueries, type, userId }) {
         <b>Tập tin</b>
         <hr solid='true' />
       </h2>
-      <File data={fileList} pathPrefix={pathPrefix} setAllData={setAllData} />
+      <File data={fileList} pathPrefix={pathPrefix} setAllData={setAllData} type={type} />
     </div>
   );
 }
