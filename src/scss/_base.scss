@@ -21,6 +21,7 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  overflow: hidden;
 }
 
 html,
@@ -62,46 +63,29 @@ a {
   color: unset;
 }
 
-a:hover {
-  color: $main-color;
-}
-
-.container {
-  width: 100%;
-  min-height: 100vh;
-  user-select: none;
-  overflow: hidden;
+.layout {
+  @include apply-bg;
+  display: grid;
+  grid-template-areas: 'header header' 'sidebar main';
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
   position: relative;
+  inset: 0;
+  min-height: 100vh;
+  color: $text-white;
+  overflow: hidden;
 
-  &:before {
-    background-image: $background-image;
-    background-size: cover;
-    bottom: -5px;
-    content: "";
-    left: -5px;
-    position: absolute;
-    right: -5px;
-    top: -5px;
-    z-index: -1;
+  .main-content {
+    grid-area: main;
+    margin-top: $header-height;
+    // backdrop-filter: blur(5px);
   }
 }
 
 .errors-message {
   display: block;
-  color: #ED213A;
+  color: #ed213a;
   font-size: 1.4rem;
   font-weight: 500;
   padding: 2px auto;
-}
-
-// menu size icon
-.css-i4bv87-MuiSvgIcon-root
-{
-  font-size: 2.5rem !important;
-}
-// menu text
-.css-10hburv-MuiTypography-root
-{
-  font-size: 1.4rem !important;
-  font-weight: 500 !important;
 }

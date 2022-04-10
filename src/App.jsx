@@ -1,5 +1,5 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
-import { authAction } from 'app/authSlice';
+import { authAction } from 'features/auth/authSlice';
 import { authentication } from 'app/firebaseConfig';
 import { generateDefaultPassword } from 'constants';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -37,7 +37,6 @@ function App() {
         getUserByEmail({ variables: { email: userEmail } });
       },
       onError: (error) => {
-        // console.log(error);
         dispatch(authAction.loginFailure());
       },
     });
@@ -56,12 +55,9 @@ function App() {
 
   return (
     <Switch>
-      {/* <Route path='/dashboard' element={<Search_filter />} /> */}
       <Route path='/' element={<Navigate to='/drive' />} />
       <Route path='/login' element={<Login />} />
       <Route path='/register' element={<Register />} />
-      {/* <Route path='/menu' element={<SideBar />} /> */}
-
       <Route element={<ProtectedRoute />}>
         <Route path='/drive/*' element={<Layout />} />
       </Route>

@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import { store } from './app/store';
 import './scss/index.scss';
-
+import './assets/icon/boxicons-2.1.2/css/boxicons.min.css';
 const container = document.getElementById('root');
 const root = ReactDOMClient.createRoot(container);
 

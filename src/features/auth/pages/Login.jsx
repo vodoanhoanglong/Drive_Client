@@ -15,10 +15,10 @@ import { useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
-import { authAction } from '../../../app/authSlice';
-import facebookIcon from '../../../assets/icon/login/facebook.svg';
-import googleIcon from '../../../assets/icon/login/google.svg';
-import githubIcon from '../../../assets/icon/login/github.svg';
+import { authAction } from '../authSlice';
+import facebookIcon from '../../../assets/icon/facebook.svg';
+import googleIcon from '../../../assets/icon/google.svg';
+import githubIcon from '../../../assets/icon/github.svg';
 
 const schemaValidation = Yup.object({
   email: Yup.string().email('Invalid Email!').required('Email is required!'),
@@ -124,8 +124,8 @@ function Login() {
   };
 
   return (
-    <div className='container'>
-      <div className='auth'>
+    <div className='auth'>
+      <div className='wrapper'>
         <div className='auth-heading'>
           <h3>Sign in</h3>
         </div>

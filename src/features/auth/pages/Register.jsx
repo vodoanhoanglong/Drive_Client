@@ -1,6 +1,6 @@
 import { useLazyQuery, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { authAction } from 'app/authSlice';
+import { authAction } from 'features/auth/authSlice';
 import { CREATE_ACCOUNT } from 'graphql/Mutation';
 import { GET_USER_BY_ID } from 'graphql/Queries';
 import React from 'react';
@@ -49,8 +49,8 @@ function Register() {
   };
 
   return (
-    <div className='container'>
-      <div className='auth'>
+    <div className='auth'>
+      <div className='wrapper'>
         <div className='auth-heading'>
           <h3>Sign up</h3>
         </div>

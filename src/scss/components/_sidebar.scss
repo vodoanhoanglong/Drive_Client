@@ -1,0 +1,65 @@
+.sidebar {
+  @include blur-bg;
+  height: 100%;
+  grid-area: sidebar;
+  width: 300px;
+  margin-top: $header-height;
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  &_tool {
+    width: 100%;
+    padding: 2.4rem;
+    button {
+      @include flex(center, center);
+      background-color: #df0e54;
+      color: $text-white;
+      margin: 0 auto;
+      padding: 16px 24px 16px 16px;
+      border-radius: 100rem;
+      cursor: pointer;
+      i {
+        font-size: 2rem;
+        margin-right: 6px;
+      }
+      &:hover {
+        opacity: 0.8;
+      }
+    }
+  }
+
+  &_link {
+    width: 100%;
+    margin-bottom: 2rem;
+    > *:not(:last-child) {
+      margin-bottom: 1rem;
+    }
+    &-item {
+      @include flex(flex-start, center);
+      padding: 16px;
+      font-size: 1.5rem;
+      user-select: none;
+      cursor: pointer;
+      border-radius: 0 24px 24px 0;
+      transition: all 0.2s ease-out;
+      i {
+        font-size: 2.5rem;
+        margin-right: 2rem;
+      }
+      &:hover {
+        background-color: rgba(69, 127, 202, 0.3);
+      }
+
+      &.active {
+        background: linear-gradient(to right, #457fca, #5691c8);
+        animation: slider 0.5s ease;
+      }
+    }
+  }
+}
+@keyframes slider {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
