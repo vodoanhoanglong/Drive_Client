@@ -1,6 +1,10 @@
+import { useAuth } from 'hooks/useAuth';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import logo from '../../assets/images/Storage-Logo.png';
 export const Header = () => {
+  const auth = useAuth();
+  const user = useSelector((state) => state.auth);
   return (
     <div className='header'>
       <div className='header_logo'>
@@ -13,14 +17,16 @@ export const Header = () => {
         <i className='bx bx-search' />
         <input type='text' placeholder='Search...' className='header_search-input' />
         <button className='header_search-filter'>
-          <i class='bx bxs-grid'></i>
+          <i className='bx bxs-grid'></i>
         </button>
       </div>
       <div className='header_account'>
         <div className='header_account-info'>
-          <spam>UserName</spam>
+          <span>{user.displayName ? user.displayName : 'Khách Hàng'}</span>
         </div>
-        <button className='header_account-logout'>Đăng xuất</button>
+        <button className='header_account-logout' onClick={() => auth.signOut()}>
+          Đăng xuất
+        </button>
       </div>
     </div>
   );

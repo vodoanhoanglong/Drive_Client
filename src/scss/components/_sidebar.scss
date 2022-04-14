@@ -8,6 +8,7 @@
   &_tool {
     width: 100%;
     padding: 2.4rem;
+    position: relative;
     button {
       @include flex(center, center);
       background-color: #df0e54;
@@ -22,6 +23,40 @@
       }
       &:hover {
         opacity: 0.8;
+      }
+    }
+    &_panel {
+      display: none;
+      position: absolute;
+      top: 16px;
+      left: 8px;
+      width: 280px;
+      height: 200px;
+      border-radius: 12px;
+      padding: 12px;
+      background: linear-gradient(to top, #457fca, #5691c8);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.5s ease;
+      &.active {
+        display: block;
+        animation: fadeIn 0.5s ease;
+      }
+      &_item {
+        @include flex(auto, center);
+        padding: 8px;
+        border-radius: 8px;
+        user-select: none;
+        font-size: 1.6rem;
+        font-weight: 500;
+        cursor: pointer;
+        &:hover {
+          background-color: rgba(200, 200, 200, 0.2);
+        }
+        i {
+          margin-right: 2rem;
+          margin-top: -3px;
+          font-size: 2rem;
+        }
       }
     }
   }
@@ -39,7 +74,7 @@
       user-select: none;
       cursor: pointer;
       border-radius: 0 24px 24px 0;
-      transition: all 0.2s ease-out;
+
       i {
         font-size: 2.5rem;
         margin-right: 2rem;
@@ -61,5 +96,18 @@
   }
   100% {
     transform: translateX(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    height: 0;
+    // transform: scale(0);
+  }
+  to {
+    opacity: 1;
+    // transform: scale(1);
+    height: 200px;
   }
 }
