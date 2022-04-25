@@ -82,7 +82,7 @@ function Login() {
         </div>
       </div>
       {auth.isLoading && (
-        <Modal isActive={auth.isLoading}>
+        <Modal isActive={true}>
           <Loading />
         </Modal>
       )}

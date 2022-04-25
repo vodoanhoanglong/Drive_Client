@@ -5,6 +5,7 @@ import logo from '../../assets/images/Storage-Logo.png';
 export const Header = () => {
   const auth = useAuth();
   const user = useSelector((state) => state.auth);
+  console.log(user);
   return (
     <div className='header'>
       <div className='header_logo'>

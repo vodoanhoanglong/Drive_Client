@@ -3,6 +3,7 @@ import { authentication } from 'app/firebaseConfig';
 import { generateDefaultPassword } from 'constants';
 import { authAction } from 'features/auth/authSlice';
 import {
+  createUserWithEmailAndPassword,
   FacebookAuthProvider,
   GithubAuthProvider,
   GoogleAuthProvider,
@@ -34,9 +35,9 @@ function useAuthProvider() {
   const [getUserInfo] = useLazyQuery(GET_USER_BY_ID);
 
   const [isLogged, setIsLogged] = React.useState(false);
-  const [loading, setLoading] = React.useState(false);
-  const handleAuthObserver = React.useRef();
+  const [loading, setLoading] = React.useState(true);
 
+  const handleAuthObserver = React.useRef();
   handleAuthObserver.current = (user) => {
     if (user.providerData[0].providerId !== 'password') {
       // login with social account
@@ -45,9 +46,18 @@ function useAuthProvider() {
         onCompleted: (data) => {
           const { access_token } = data.login;
           const id = jwtDecode(access_token).sub;
-          dispatch(authAction.login({ id, email: user.email, displayName: user.displayName }));
+          dispatch(
+            authAction.login({
+              id,
+              email: user.email,
+              displayName: user.displayName,
+              typeofLogin: user.providerData[0].providerId,
+            })
+          );
           localStorage.setItem('token', access_token);
+          setIsLogged(true);
           navigate('/');
+          setLoading(false);
         },
       });
     } else {
@@ -62,12 +72,9 @@ function useAuthProvider() {
   };
 
   React.useEffect(() => {
-    setLoading(true);
     const unregisterAuthObserver = onAuthStateChanged(authentication, async (user) => {
       if (user) {
         handleAuthObserver.current(user);
-        setIsLogged(true);
-        setLoading(false);
       } else {
         setLoading(false);
         setIsLogged(false);
@@ -79,23 +86,39 @@ function useAuthProvider() {
     };
   }, []);
 
-  const signInWithAccount = async (values) => {
+  const signInWithAccount = async ({ email, password }) => {
     console.log('signInWithAccount');
     setLoading(true);
     login({
-      variables: { email: values.email, password: values.password },
+      variables: { email, password },
       onCompleted: (res) => {
         const { access_token } = res.login;
         localStorage.setItem('token', access_token);
         const id = jwtDecode(access_token).sub;
         getUserInfo({
           variables: { ID: id },
-          onCompleted: (users) => {
-            console.log(users);
+          onCompleted: async (users) => {
             const user = users.account[0];
-            dispatch(authAction.login({ id, email: user.email, displayName: user.fullName }));
-            setIsLogged(true);
-            navigate('/');
+            try {
+              const res = await createUserWithEmailAndPassword(authentication, email, password);
+              console.log(res);
+              dispatch(
+                authAction.login({
+                  id,
+                  email,
+                  displayName: user.fullName,
+                  typeofLogin: res.user.providerData[0].providerId,
+                })
+              );
+              setIsLogged(true);
+              navigate('/');
+              setLoading(false);
+            } catch (err) {
+              console.log(err.message);
+            }
+          },
+          onError: (err) => {
+            console.log('err', err);
             setLoading(false);
           },
         });
@@ -103,16 +126,11 @@ function useAuthProvider() {
       onError: (error) => {
         // Show Notify message error
         console.log('error', error.message);
+        setLoading(false);
       },
     });
-
-    // try {
-    //   const user = await createUserWithEmailAndPassword(authentication, email, password);
-
-    // } catch (err) {
-    //   console.log(err.message);
-    // }
   };
+
   const signInWithSocial = async (platformID) => {
     setLoading(true);
     let provider = null;
@@ -138,7 +156,12 @@ function useAuthProvider() {
           const id = jwtDecode(access_token).sub;
           localStorage.setItem('token', access_token);
           dispatch(
-            authAction.login({ id, email: res.user.email, displayName: res.user.displayName })
+            authAction.login({
+              id,
+              email: res.user.email,
+              displayName: res.user.displayName,
+              typeofLogin: res.user.providerId,
+            })
           );
           setIsLogged(true);
           navigate('/');
@@ -156,7 +179,12 @@ function useAuthProvider() {
               const { id, access_token } = data.createAccount;
               localStorage.setItem('token', access_token);
               dispatch(
-                authAction.login({ id, email: res.user.email, displayName: res.user.displayName })
+                authAction.login({
+                  id,
+                  email: res.user.email,
+                  displayName: res.user.displayName,
+                  typeofLogin: res.user.providerId,
+                })
               );
               setIsLogged(true);
               navigate('/');

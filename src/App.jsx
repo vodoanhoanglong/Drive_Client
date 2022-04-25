@@ -30,10 +30,10 @@ function App() {
     <ApolloProvider client={client}>
       <AuthProvider>
         <Switch>
-          <Route path='/' element={<Navigate to='/drive' />} />
           <Route path='/login' element={<Login />} />
           <Route path='/register' element={<Register />} />
           <Route element={<ProtectedRoute />}>
+            <Route path='/' element={<Navigate to='/drive' />} />
             <Route path='/drive/*' element={<Layout />} />
           </Route>
           <Route path='*' element={<NotFound />} />

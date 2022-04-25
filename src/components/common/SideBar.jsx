@@ -35,7 +35,9 @@ const sidebarToolItem = [
 ];
 export const SideBar = ({ contentID, setContent }) => {
   const { active, setActive, nodeRef } = useClickOutSite();
+
   const hiddenFileInput = React.useRef(null);
+
   const handleAddItem = (type) => {
     if (type === 'file') {
       hiddenFileInput.current.click();
@@ -44,10 +46,12 @@ export const SideBar = ({ contentID, setContent }) => {
       console.log('add folder');
     }
   };
+
   const changeHandler = (event) => {
     console.log(event.target.files[0]);
     setActive(false);
   };
+
   return (
     <div className='sidebar'>
       <div className='sidebar_tool'>
