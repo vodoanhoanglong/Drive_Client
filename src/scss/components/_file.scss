@@ -1,0 +1,55 @@
+.file {
+  background: transparent;
+  backdrop-filter: blur(25px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  user-select: none;
+  transition: all 0.3s ease;
+  isolation: isolate;
+  cursor: pointer;
+
+  &:hover {
+    background-color: rgba(69, 127, 202, 0.5);
+  }
+
+  &_cover {
+    width: 100%;
+    padding: 1rem 2rem;
+    img {
+      object-fit: fill;
+    }
+  }
+
+  &_info {
+    @include flex(space-between, center);
+    padding: 8px;
+    border-radius: 0 0 6px 6px;
+    background-color: rgba(69, 127, 202, 0.5);
+
+    &_name {
+      font-size: 1.6rem;
+      i {
+        font-size: 1.8rem;
+        margin-right: 6px;
+      }
+    }
+
+    &_tool {
+      @include flex(flex-start, center);
+      &_button {
+        background-color: transparent;
+        color: rgb(235, 235, 235);
+        margin-left: 8px;
+        border-radius: 100rem;
+        cursor: pointer;
+        &:hover {
+          opacity: 0.8;
+        }
+        i {
+          font-size: 2rem;
+          margin-top: 4px;
+        }
+      }
+    }
+  }
+}

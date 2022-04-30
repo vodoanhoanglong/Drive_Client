@@ -1,12 +1,8 @@
-import { useLazyQuery, useMutation } from '@apollo/client';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { authAction } from 'app/authSlice';
-import { CREATE_ACCOUNT } from 'graphql/Mutation';
-import { GET_USER_BY_ID } from 'graphql/Queries';
+import { useAuth } from 'hooks/useAuth';
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import * as Yup from 'yup';
 
 const schemaValidation = Yup.object({
@@ -19,42 +15,31 @@ const schemaValidation = Yup.object({
 });
 
 function Register() {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const [createAccount] = useMutation(CREATE_ACCOUNT);
-  const [getUserByID] = useLazyQuery(GET_USER_BY_ID, {
-    onCompleted: (data) => {
-      dispatch(authAction.loginSuccess(data.account[0]));
-      navigate('/drive');
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+  const auth = useAuth();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm({ resolver: yupResolver(schemaValidation), mode: 'onChange' });
 
-  const handleRegister = (data) => {
-    createAccount({
-      variables: { email: data.email, password: data.password, displayName: data.username },
-      onCompleted: (data) => {
-        const { id, access_token } = data.createAccount;
-        localStorage.setItem('token', access_token);
-        getUserByID({ variables: { ID: id } });
-      },
-    });
-  };
+  // const handleRegister = (data) => {
+  //   createAccount({
+  //     variables: { email: data.email, password: data.password, displayName: data.username },
+  //     onCompleted: (data) => {
+  //       const { id, access_token } = data.createAccount;
+  //       localStorage.setItem('token', access_token);
+  //       getUserByID({ variables: { ID: id } });
+  //     },
+  //   });
+  // };
 
   return (
-    <div className='container'>
-      <div className='auth'>
+    <div className='auth'>
+      <div className='wrapper'>
         <div className='auth-heading'>
           <h3>Sign up</h3>
         </div>
-        <form autoComplete='off' className='auth-form' onSubmit={handleSubmit(handleRegister)}>
+        <form autoComplete='off' className='auth-form' onSubmit={handleSubmit(auth.signUp)}>
           <div className={`auth-form-control ${errors.username ? 'error' : ''}`}>
             <label htmlFor='username'>Username</label>
             <input {...register('username')} id='username' type='text' placeholder='Username' />

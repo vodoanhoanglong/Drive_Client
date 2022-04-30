@@ -2,10 +2,12 @@
 @import './mixins';
 @import './base';
 
-
-@import './components/layout';
+@import './components/header';
+@import './components/sidebar';
+@import './components/modal';
 @import './components/loading';
-@import './components/drives/drives';
+@import './components/folder';
+@import './components/file';
 
-@import './components/filter-search/filter-seach';
 @import './components/auth';
+@import './components/drive';
